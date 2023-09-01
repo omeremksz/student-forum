@@ -29,9 +29,12 @@ public class Post {
     private PostPreferences postPreferences;
 
     @Lob
-    @Column(columnDefinition = "text")
+    @Column(name ="content_text", columnDefinition = "text")
     private String contentText;
+    @Column(name ="content_picture_url")
     private String contentPictureURL;
+    @Column(name = "creation_date")
     private LocalDateTime creationDate;
+    @Column(name = "update_date")
     private LocalDateTime updateDate;
 }

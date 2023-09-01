@@ -29,8 +29,10 @@ public class DirectMessage {
     private User receiver;
 
     @Lob
-    @Column(columnDefinition = "text")
+    @Column(name= "content_text", columnDefinition = "text")
     private String contentText;
+    @Column(name = "sent_date")
     private LocalDateTime sentDate;
+    @Column(name = "update_date")
     private LocalDateTime updateDate;
 }
