@@ -20,8 +20,12 @@ public class Profile {
     @JsonIgnore
     private User user;
 
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
+    @Column(name = "profile_picture_url")
     private String profilePictureURL;
     @Lob
     @Column(columnDefinition = "text")

@@ -28,9 +28,15 @@ public class Comment {
     @JsonIgnore
     private Post post;
 
+    // to hold the id of the comment that this comment is a reply to
+    @Column(name = "prior_comment_id")
+    private Long priorCommentId;
+
     @Lob
-    @Column(columnDefinition = "text")
+    @Column(name = "content_text", columnDefinition = "text")
     private String contentText;
+    @Column(name = "creation_date")
     private LocalDateTime creationDate;
+    @Column(name = "update_date")
     private LocalDateTime updateDate;
 }

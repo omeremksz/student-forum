@@ -23,8 +23,12 @@ public class UserInteraction {
     @JsonIgnore
     private User user;
 
+    @Column(name = "interaction_type")
     private String interactionType;
+    @Column(name = "reference_id")
     private Long referenceId;
+    @Column(name = "reference_type")
     private String referenceType;
+    @Column(name = "interaction_date")
     private LocalDateTime interactionDate;
 }

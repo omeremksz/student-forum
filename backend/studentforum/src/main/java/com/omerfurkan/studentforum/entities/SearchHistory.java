@@ -22,6 +22,8 @@ public class SearchHistory {
     @JsonIgnore
     private User user;
 
+    @Column(name = "search_term")
     private String searchTerm;
+    @Column(name = "search_date")
     private LocalDateTime searchDate;
 }
