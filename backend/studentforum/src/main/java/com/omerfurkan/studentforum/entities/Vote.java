@@ -7,6 +7,8 @@ import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "vote")
 @Data
@@ -29,5 +31,11 @@ public class Vote {
 
     @Column(name = "is_upvote")
     private boolean isUpvote;
+
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate;
+
+    @Column(name = "update_date")
+    private LocalDateTime updateDate;
 
 }
