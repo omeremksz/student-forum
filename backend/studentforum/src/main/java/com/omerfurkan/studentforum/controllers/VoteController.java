@@ -18,10 +18,6 @@ public class VoteController {
 
     private VoteService voteService;
 
-    private UserService userService;
-
-    private CommentService commentService;
-
     @GetMapping
     public List<Vote> getAllVotes(){
         return voteService.getAllVotes();
