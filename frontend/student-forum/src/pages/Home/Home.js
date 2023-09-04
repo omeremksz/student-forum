@@ -1,23 +1,18 @@
 import React from 'react'
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
-import { Box, Container, Stack, makeStyles } from '@mui/material';
+import { Box, Container, Stack, } from '@mui/material';
 import Post from '../Post/Post';
 
-const useStyles = makeStyles(() => ({
-  root: {
-    minHeight: '95vh', 
-    display: 'flex', 
-    flexDirection: 'column', 
-    alignItems: 'center',
-  }
-}))
-
 const Home = () => {
-  const { classes } = useStyles();
   return (
     <>
-      <Box className={classes.root}>
+      <Box sx={{
+        minHeight: '95vh', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center',
+      }}>
         <Navbar/>
         <Container>
           <Stack
