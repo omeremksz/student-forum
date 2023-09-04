@@ -1,5 +1,3 @@
-import React from 'react'
-
 const Colors = {
     button: {
         lighterGray: "#E0E0E0",
