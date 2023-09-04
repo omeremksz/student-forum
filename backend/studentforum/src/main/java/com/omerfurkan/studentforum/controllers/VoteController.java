@@ -1,6 +1,7 @@
 package com.omerfurkan.studentforum.controllers;
 
 import com.omerfurkan.studentforum.entities.Vote;
+import com.omerfurkan.studentforum.requests.VoteCreateRequest;
 import com.omerfurkan.studentforum.requests.VoteUpdateRequest;
 import com.omerfurkan.studentforum.services.CommentService;
 import com.omerfurkan.studentforum.services.UserService;
@@ -34,6 +35,11 @@ public class VoteController {
     @PutMapping("/{voteId}")
     public Vote updateVoteById(@PathVariable Long voteId, @RequestBody VoteUpdateRequest voteUpdateRequest) {
         return voteService.updateVoteById(voteId, voteUpdateRequest);
+    }
+
+    @PostMapping
+    public Vote createNewVote(@RequestBody VoteCreateRequest voteCreateRequest){
+        return voteService.createNewVote(voteCreateRequest);
     }
 
     @DeleteMapping("/{voteId}")
