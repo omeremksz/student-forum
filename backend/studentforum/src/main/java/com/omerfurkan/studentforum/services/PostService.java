@@ -6,11 +6,13 @@ import com.omerfurkan.studentforum.entities.User;
 import com.omerfurkan.studentforum.repositories.PostRepository;
 import com.omerfurkan.studentforum.requests.PostCreateRequest;
 import com.omerfurkan.studentforum.requests.PostUpdateRequest;
+import com.omerfurkan.studentforum.responses.PostResponse;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -24,8 +26,9 @@ public class PostService {
         this.userService = userService;
     }
 
-    public List<Post> getAllPosts() {
-        return postRepository.findAll();
+    public List<PostResponse> getAllPosts() {
+        List<Post> postList = postRepository.findAll();
+        return postList.stream().map(p -> new PostResponse(p)).collect(Collectors.toList());
     }
 
     public Post getPostById(Long postId) {
