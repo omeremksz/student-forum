@@ -10,7 +10,10 @@ const Colors = {
     },
     footer: {
         main: "#232629",
-    }  
+    },
+    link: {
+        main: "#0074cc",
+    },
 }
 
 export default Colors

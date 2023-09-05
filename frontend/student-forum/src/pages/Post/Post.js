@@ -10,40 +10,55 @@ import Avatar from '@mui/material/Avatar';
 import IconButton, { IconButtonProps } from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import { red } from '@mui/material/colors';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import RepeatIcon from '@mui/icons-material/Repeat';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CommentIcon from '@mui/icons-material/Comment';
 import customImage from "../../images/custom-image.jpg"
+import { Link } from 'react-router-dom';
+import colors from '../../styles/colors';
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
   }
   
-  const ExpandMore = styled((props: ExpandMoreProps) => {
-    const { expand, ...other } = props;
-    return <IconButton {...other} />;
-  })(({ theme, expand }) => ({
-    marginLeft: 'auto',
-    transition: theme.transitions.create('transform', {
-      duration: theme.transitions.duration.shortest,
-    }),
-  }));
+const ExpandMore = styled((props: ExpandMoreProps) => {
+  const { expand, ...other } = props;
+  return <IconButton {...other} />;
+})(({ theme, expand }) => ({
+  marginLeft: 'auto',
+  transition: theme.transitions.create('transform', {
+    duration: theme.transitions.duration.shortest,
+  }),
+}));
 
-const Post = () => {
+const formatDate = (dateString) => {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' };
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', options);
+};
+
+
+const Post = (props) => {
+    const { userId, userName, contentText, creationDate } = props;
     const [expanded, setExpanded] = useState(false);
+
+    const formattedCreationDate = formatDate(creationDate);
+    const avatarLetter = userName.charAt(0).toUpperCase();
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
     };
 
-
   return (
-    <Card sx={{ maxWidth: 500, mb: 3, mt: 3 }}>
+    <Card sx={{ width: 500, mb: 3, mt: 3 }}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-            O
+          <Avatar sx={{bgcolor: red[500]}} aria-label="recipe">
+            <Link style={{textDecoration: "none", color:"white"}} to={{ pathname: '/user/' + userId }} >
+              {avatarLetter}
+            </Link>
           </Avatar>
         }
         action={
@@ -51,8 +66,25 @@ const Post = () => {
             <MoreVertIcon />
           </IconButton>
         }
-        title="Omer Emeksiz"
-        subheader="September 14, 2016"
+        title={
+          <Link 
+            style={{ textDecoration: 'none', color: 'inherit' }}
+            to={{ pathname: '/user/' + userId }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.textDecoration = 'underline';
+              e.currentTarget.style.borderColor = colors.link.main;
+              e.currentTarget.style.color = colors.link.main;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.textDecoration = 'none';
+              e.currentTarget.style.borderColor = 'transparent';
+              e.currentTarget.style.color = 'inherit'; 
+            }}
+          >
+            {userName}
+          </Link>
+        }
+        subheader={formattedCreationDate}
       />
       <CardMedia
         component="img"
@@ -62,17 +94,21 @@ const Post = () => {
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the mussels,
-          if you like.
+          {contentText}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
+        <IconButton aria-label="upvote">
+          <KeyboardArrowUpIcon />
         </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
+        <Typography>
+          15
+        </Typography>
+        <IconButton aria-label="downvote">
+          <KeyboardArrowDownIcon />
+        </IconButton>
+        <IconButton aria-label="repost">
+          <RepeatIcon />
         </IconButton>
         <ExpandMore
           expand={expanded}

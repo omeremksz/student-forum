@@ -28,7 +28,6 @@ public class Comment {
     @JsonIgnore
     private Post post;
 
-    // to hold the id of the comment that this comment is a reply to
     @Column(name = "prior_comment_id")
     private Long priorCommentId;
 
