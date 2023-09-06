@@ -6,11 +6,13 @@ import com.omerfurkan.studentforum.entities.User;
 import com.omerfurkan.studentforum.repositories.CommentRepository;
 import com.omerfurkan.studentforum.requests.CommentCreateRequest;
 import com.omerfurkan.studentforum.requests.CommentUpdateRequest;
+import com.omerfurkan.studentforum.responses.CommentResponse;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -24,8 +26,18 @@ public class CommentService {
         this.postService = postService;
     }
 
-    public List<Comment> getAllComments() {
-        return commentRepository.findAll();
+    public List<CommentResponse> getAllComments(Optional<Long> userId, Optional<Long> postId) {
+        List<Comment> commentList;
+        if (userId.isPresent() && postId.isPresent()) {
+            commentList = commentRepository.findByUserIdAndPostId(userId.get(), postId.get());
+        } else if (userId.isPresent()) {
+            commentList = commentRepository.findByUserId(userId.get());
+        } else if (postId.isPresent()) {
+            commentList = commentRepository.findByPostId(postId.get());
+        } else {
+            commentList = commentRepository.findAll();
+        }
+        return commentList.stream().map(c -> new CommentResponse(c)).collect(Collectors.toList());
     }
 
     public Comment getCommentById(Long commentId) {

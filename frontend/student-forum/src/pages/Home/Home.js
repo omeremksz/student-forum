@@ -3,6 +3,7 @@ import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import { Box, Container, Stack, } from '@mui/material';
 import Post from '../Post/Post';
+import { GetWithoutAuth } from '../../services/HttpService';
 
 const Home = () => {
   const [postList, setPostList] = useState([]);
@@ -10,19 +11,19 @@ const Home = () => {
   const [error, setError] = useState(null);
 
   const refreshPosts = () => {
-    fetch("/posts")
-      .then(res => res.json())
-      .then(
-          (result) => {
-            console.log(result)
-            setIsLoaded(true);
-            setPostList(result);
-          },
-          (error) => {
-            setIsLoaded(true);
-            setError(error);
-          }
-      )
+
+    GetWithoutAuth("/posts")
+    .then(res => res.json())
+    .then(
+        (result) => {
+          setIsLoaded(true);
+          setPostList(result);
+        },
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+    ) 
   }
 
   useEffect(() => {
@@ -44,7 +45,7 @@ const Home = () => {
           alignItems: 'center',
         }}>
           <Navbar/>
-          <Container>
+          <Container >
             <Stack
               direction="column"
               alignItems="center"
@@ -53,7 +54,7 @@ const Home = () => {
             >
               <Box sx={{flex:5, p:2}}>
                 {postList.map(post => (
-                  <Post userId={post.userId} userName={post.userName} contentText={post.contentText} creationDate={post.creationDate} />
+                  <Post postId = {post.id} userId = {post.userId} userName = {post.userName} contentText = {post.contentText} creationDate = {post.creationDate} />
                 ))}
               </Box>
             </Stack >
