@@ -48,11 +48,11 @@ const PostForm = () => {
                                     placeholder='What do you want to talk about ?'
                                     inputProps={{maxLength:500}}
                                     fullWidth
+                                    minRows={4}
                                     value={text}
                                     onChange={ (i) => handleText(i.target.value) }
                                     sx={{
                                         width: '100%',
-                                        minHeight: '100px', 
                                     }}
                     />}
                     <label htmlFor="image-upload" style={{ marginTop: '16px' }}>
