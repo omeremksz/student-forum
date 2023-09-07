@@ -54,7 +54,13 @@ const Home = () => {
             >
               <Box sx={{flex:5, p:2}}>
                 {postList.map(post => (
-                  <Post postId = {post.id} userId = {post.userId} userName = {post.userName} contentText = {post.contentText} creationDate = {post.creationDate} />
+                  <Post 
+                    postId = {post.id} 
+                    userId = {post.userId} 
+                    userName = {post.userName} 
+                    contentText = {post.contentText} 
+                    creationDate = {post.creationDate} 
+                    postVotes = {post.postVotes}/>
                 ))}
               </Box>
             </Stack >
