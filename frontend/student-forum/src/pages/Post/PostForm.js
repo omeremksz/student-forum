@@ -5,25 +5,25 @@ import { useParams } from 'react-router-dom';
 
 const PostForm = () => {
     const { userId } = useParams();
-    const [text, setText] = useState("");
-    const [imageURL, setImageURL] = useState(null);
+    const [contentText, setContentText] = useState("");
+    const [contentImageURL, setContentImageURL] = useState(null);
 
-    const handleText = (value) => {
-        setText(value);
+    const handleContentText = (value) => {
+        setContentText(value);
     }
 
-    const handleImage = (event) => {
+    const handleContentImage = (event) => {
         const selectedImage = event.target.files[0];
         if (selectedImage) {
           const imageUrl = URL.createObjectURL(selectedImage);
-          setImageURL(imageUrl);
+          setContentImageURL(imageUrl);
         }
     };
 
-    const handleSubmit = () => {
+    const handlePostButton = () => {
         createPost();
-        setText("");
-        setImageURL(null);
+        setContentText("");
+        setContentImageURL(null);
     }
 
     const createPost = () => {
@@ -31,8 +31,8 @@ const PostForm = () => {
         PostWithoutAuth("/posts", {
             userId: userId,
             postPreferencesId: 1,
-            contentText: text,
-            contentPictureURL: imageURL,
+            contentText: contentText,
+            contentPictureURL: contentImageURL,
         })
         .then((res) => res.json())
         .catch((err) => console.log(err))
@@ -49,8 +49,8 @@ const PostForm = () => {
                                     inputProps={{maxLength:500}}
                                     fullWidth
                                     minRows={4}
-                                    value={text}
-                                    onChange={ (i) => handleText(i.target.value) }
+                                    value={contentText}
+                                    onChange={ (i) => handleContentText(i.target.value) }
                                     sx={{
                                         width: '100%',
                                     }}
@@ -61,7 +61,7 @@ const PostForm = () => {
                             type="file"
                             accept="image/*"
                             style={{ display: 'none' }}
-                            onChange={ handleImage }
+                            onChange={ handleContentImage }
                         />
                         <Button
                         variant="contained"
@@ -74,14 +74,14 @@ const PostForm = () => {
                             marginRight: 'auto',
                         }}
                         >
-                            {imageURL ? 'Image Selected' : 'Upload Image'}
+                            {contentImageURL ? 'Image Selected' : 'Upload Image'}
                         </Button>
                     </label>
                 </Typography>
             </CardContent>
             <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
                 <CardActions>
-                    <Button variant="contained" size="small" onClick={handleSubmit}>
+                    <Button variant="contained" size="small" onClick={handlePostButton}>
                         Post
                     </Button>
                 </CardActions>

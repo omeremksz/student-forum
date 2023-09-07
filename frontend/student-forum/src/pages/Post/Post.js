@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
@@ -18,9 +18,10 @@ import CommentIcon from '@mui/icons-material/Comment';
 import customImage from "../../images/custom-image.jpg"
 import { Link } from 'react-router-dom';
 import colors from '../../styles/colors';
-import { GetWithoutAuth } from '../../services/HttpService';
+import { GetWithoutAuth, PostWithoutAuth } from '../../services/HttpService';
 import { Container } from '@mui/material';
 import Comment from '../Comment/Comment';
+import CommentForm from '../Comment/CommentForm';
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -44,26 +45,65 @@ const formatDate = (dateString) => {
 
 
 const Post = (props) => {
-    const { postId, userId, userName, contentText, creationDate } = props;
+    const { postId, userId, userName, contentText, creationDate, postVotes } = props;
 
     const [expanded, setExpanded] = useState(false);
     const [commentList, setCommentList] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(null);
     const isInitialMount = useRef(true);
+    const [refresh, setRefresh] = useState(false);
 
     const formattedCreationDate = formatDate(creationDate);
     const avatarLetter = userName.charAt(0).toUpperCase();
+    
+    const [upVoteCount, setUpVoteCount] = useState(0);
+    const [downVoteCount, setDownVoteCount] = useState(0);
+
+    const createVote = (isUpVote) => {
+      PostWithoutAuth("/votes/post", {
+          userId: 2,
+          postId: postId,
+          isUpVote: isUpVote,
+      })
+          .then((res) => res.json())
+          .then((data) => {
+            if (isUpVote) {
+              setUpVoteCount(upVoteCount + 1);
+            } else {
+              setDownVoteCount(downVoteCount + 1);
+            }
+          })
+          .catch((err) => console.log(err));
+    };
+
+    useEffect(() => {
+      const upVotes = postVotes.filter((vote) => vote.upVote);
+      setUpVoteCount(upVotes.length);
+      setDownVoteCount(postVotes.length - upVotes.length);
+  }, [postVotes]);
+
+    const handleUpVoteClick = () => {
+      createVote(true);
+    };
+
+    const handleDownVoteClick = () => {
+      createVote(false);
+    };
+
+    const setCommentRefresh = () => {
+      setRefresh(true);
+    }
 
     const handleExpandClick = () => {
         setExpanded(!expanded);
         refreshComments();
     };
 
-    const refreshComments = () => {
+    const refreshComments = useCallback(() => {
       GetWithoutAuth("/comments?postId="+postId)
-      .then(res => res.json())
-      .then(
+        .then(res => res.json())
+        .then(
           (result) => {
             setCommentList(result);
             setIsLoaded(true);
@@ -72,8 +112,9 @@ const Post = (props) => {
             setIsLoaded(true);
             setError(error);
           }
-      ) 
-    }
+        );
+      setRefresh(false);
+    }, [postId]);
 
     useEffect(() => {
       if (isInitialMount.current) {
@@ -81,7 +122,8 @@ const Post = (props) => {
       } else {
         refreshComments();
       }
-    }, [])
+    }, [refresh, refreshComments])
+
   
     return (
       <Card sx={{ width: 500, mb: 3, mt: 3 }}>
@@ -132,13 +174,13 @@ const Post = (props) => {
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
-          <IconButton aria-label="upvote">
+          <IconButton aria-label="upvote" onClick={handleUpVoteClick}>
             <KeyboardArrowUpIcon />
           </IconButton>
           <Typography>
-            15
+            {upVoteCount - downVoteCount}
           </Typography>
-          <IconButton aria-label="downvote">
+          <IconButton aria-label="downvote" onClick={handleDownVoteClick}>
             <KeyboardArrowDownIcon />
           </IconButton>
           <IconButton aria-label="repost">
@@ -157,8 +199,16 @@ const Post = (props) => {
           <Container >
             {error? "error" :
             isLoaded? commentList.map(comment => (
-              <Comment userId = {comment.userId} userName = {comment.userName} contentText = {comment.contentText} creationDate = {comment.creationDate}></Comment>
+              <Comment 
+                commentId = {comment.id}
+                userId = {comment.userId} 
+                userName = {comment.userName} 
+                contentText = {comment.contentText} 
+                creationDate = {comment.creationDate} 
+                commentVotes = {comment.commentVotes}
+                />
             )) : "Loading"}
+            <CommentForm postId = {postId} setCommentRefresh={setCommentRefresh}/>
           </Container>
         </Collapse>
       </Card>

@@ -1,9 +1,11 @@
 package com.omerfurkan.studentforum.responses;
 
 import com.omerfurkan.studentforum.entities.Post;
+import com.omerfurkan.studentforum.entities.Vote;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class PostResponse {
@@ -14,8 +16,9 @@ public class PostResponse {
     private String contentPictureURL;
     private LocalDateTime creationDate;
     private LocalDateTime updateDate;
+    private List<VoteResponse> postVotes;
 
-    public PostResponse(Post entity) {
+    public PostResponse(Post entity, List<VoteResponse> postVotes) {
         this.id = entity.getId();
         this.userId = entity.getUser().getId();
         this.userName = entity.getUser().getUserName();
@@ -23,5 +26,6 @@ public class PostResponse {
         this.contentPictureURL = entity.getContentPictureURL();
         this.creationDate = entity.getCreationDate();
         this.updateDate = entity.getUpdateDate();
+        this.postVotes = postVotes;
     }
 }

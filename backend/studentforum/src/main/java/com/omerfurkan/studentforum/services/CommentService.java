@@ -7,6 +7,8 @@ import com.omerfurkan.studentforum.repositories.CommentRepository;
 import com.omerfurkan.studentforum.requests.CommentCreateRequest;
 import com.omerfurkan.studentforum.requests.CommentUpdateRequest;
 import com.omerfurkan.studentforum.responses.CommentResponse;
+import com.omerfurkan.studentforum.responses.PostResponse;
+import com.omerfurkan.studentforum.responses.VoteResponse;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,11 +21,13 @@ public class CommentService {
     private CommentRepository commentRepository;
     private UserService userService;
     private PostService postService;
+    private VoteService voteService;
 
-    public CommentService(CommentRepository commentRepository, UserService userService, PostService postService) {
+    public CommentService(CommentRepository commentRepository, UserService userService, PostService postService, VoteService voteService) {
         this.commentRepository = commentRepository;
         this.userService = userService;
         this.postService = postService;
+        this.voteService = voteService;
     }
 
     public List<CommentResponse> getAllComments(Optional<Long> userId, Optional<Long> postId) {
@@ -37,7 +41,9 @@ public class CommentService {
         } else {
             commentList = commentRepository.findAll();
         }
-        return commentList.stream().map(c -> new CommentResponse(c)).collect(Collectors.toList());
+        return commentList.stream().map(c -> {
+            List<VoteResponse> commentVotes = voteService.getAllVotes(Optional.ofNullable(null), Optional.ofNullable(null), Optional.of(c.getId()));
+            return new CommentResponse(c, commentVotes);}).collect(Collectors.toList());
     }
 
     public Comment getCommentById(Long commentId) {
