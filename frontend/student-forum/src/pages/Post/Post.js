@@ -60,6 +60,14 @@ const Post = (props) => {
     const [upVoteCount, setUpVoteCount] = useState(0);
     const [downVoteCount, setDownVoteCount] = useState(0);
 
+    const handleUpVoteClick = () => {
+      createVote(true);
+    };
+
+    const handleDownVoteClick = () => {
+      createVote(false);
+    };
+
     const createVote = (isUpVote) => {
       PostWithoutAuth("/votes/post", {
           userId: 2,
@@ -81,15 +89,7 @@ const Post = (props) => {
       const upVotes = postVotes.filter((vote) => vote.upVote);
       setUpVoteCount(upVotes.length);
       setDownVoteCount(postVotes.length - upVotes.length);
-  }, [postVotes]);
-
-    const handleUpVoteClick = () => {
-      createVote(true);
-    };
-
-    const handleDownVoteClick = () => {
-      createVote(false);
-    };
+    }, [postVotes]);
 
     const setCommentRefresh = () => {
       setRefresh(true);

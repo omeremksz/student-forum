@@ -9,5 +9,4 @@ public class PostUpdateRequest {
     private Long postPreferencesId;
     private String contentText;
     private LocalDateTime updatedTime;
-
 }

@@ -45,6 +45,7 @@ public class PostService {
     public Post createNewPost(PostCreateRequest postCreateRequest) {
         User user = userService.getUserById(postCreateRequest.getUserId());
         PostPreferences postPreferences = postPreferencesService.getPostPreferencesById(postCreateRequest.getPostPreferencesId());
+
         if (user == null || postPreferences == null) {
             return null;
         } else {
@@ -53,7 +54,7 @@ public class PostService {
             postToSave.setUser(user);
             postToSave.setPostPreferences(postPreferences);
             postToSave.setContentText(postCreateRequest.getContentText());
-            postToSave.setContentPictureURL(postCreateRequest.getContentPictureURL());
+            postToSave.setContentImageURL(postCreateRequest.getContentImageURL());
             postToSave.setCreationDate(LocalDateTime.now());
             postToSave.setUpdateDate(LocalDateTime.now());
 

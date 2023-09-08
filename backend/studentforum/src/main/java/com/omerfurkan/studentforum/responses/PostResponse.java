@@ -13,7 +13,7 @@ public class PostResponse {
     private Long userId;
     private String userName;
     private String contentText;
-    private String contentPictureURL;
+    private String contentImageURL;
     private LocalDateTime creationDate;
     private LocalDateTime updateDate;
     private List<VoteResponse> postVotes;
@@ -23,7 +23,7 @@ public class PostResponse {
         this.userId = entity.getUser().getId();
         this.userName = entity.getUser().getUserName();
         this.contentText = entity.getContentText();
-        this.contentPictureURL = entity.getContentPictureURL();
+        this.contentImageURL = entity.getContentImageURL();
         this.creationDate = entity.getCreationDate();
         this.updateDate = entity.getUpdateDate();
         this.postVotes = postVotes;
