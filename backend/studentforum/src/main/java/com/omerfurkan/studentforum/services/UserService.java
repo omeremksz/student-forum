@@ -25,6 +25,10 @@ public class UserService {
         return userRepository.findById(userId).orElse(null);
     }
 
+    public User getUserByUserName(String userName) {
+        return userRepository.findByUserName(userName);
+    }
+
     public User createNewUser(UserCreateRequest userCreateRequest) {
         //User credentials validation
         User userToSave = new User();
@@ -52,4 +56,5 @@ public class UserService {
     public void deleteUserById(Long userId) {
         userRepository.deleteById(userId);
     }
+
 }
