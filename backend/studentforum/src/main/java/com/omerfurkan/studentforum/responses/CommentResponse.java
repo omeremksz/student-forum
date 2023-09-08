@@ -11,9 +11,7 @@ import java.util.List;
 public class CommentResponse {
     private Long id;
     private Long userId;
-    private Long postId;
     private String userName;
-    private Long priorCommentId;
     private String contentText;
     private LocalDateTime creationDate;
     private LocalDateTime updateDate;
@@ -22,9 +20,7 @@ public class CommentResponse {
     public CommentResponse(Comment entity, List<VoteResponse> commentVotes) {
         this.id = entity.getId();
         this.userId = entity.getUser().getId();
-        this.postId = entity.getPost().getId();
         this.userName = entity.getUser().getUserName();
-        this.priorCommentId = entity.getPriorCommentId();
         this.contentText = entity.getContentText();
         this.creationDate = entity.getCreationDate();
         this.updateDate = entity.getUpdateDate();

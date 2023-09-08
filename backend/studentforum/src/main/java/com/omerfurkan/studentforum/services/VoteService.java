@@ -8,9 +8,7 @@ import com.omerfurkan.studentforum.entities.Vote;
 import com.omerfurkan.studentforum.repositories.VoteRepository;
 import com.omerfurkan.studentforum.requests.VoteCreateRequest;
 import com.omerfurkan.studentforum.requests.VoteUpdateRequest;
-import com.omerfurkan.studentforum.responses.CommentResponse;
 import com.omerfurkan.studentforum.responses.VoteResponse;
-import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 

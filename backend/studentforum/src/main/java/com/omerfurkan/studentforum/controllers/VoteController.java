@@ -4,10 +4,7 @@ import com.omerfurkan.studentforum.entities.Vote;
 import com.omerfurkan.studentforum.requests.VoteCreateRequest;
 import com.omerfurkan.studentforum.requests.VoteUpdateRequest;
 import com.omerfurkan.studentforum.responses.VoteResponse;
-import com.omerfurkan.studentforum.services.CommentService;
-import com.omerfurkan.studentforum.services.UserService;
 import com.omerfurkan.studentforum.services.VoteService;
-import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

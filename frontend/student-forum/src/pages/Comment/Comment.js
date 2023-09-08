@@ -23,6 +23,14 @@ const Comment = (props) => {
     const [upVoteCount, setUpVoteCount] = useState(0);
     const [downVoteCount, setDownVoteCount] = useState(0);
 
+    const handleUpVoteClick = () => {
+        createVote(true);
+    };
+
+    const handleDownVoteClick = () => {
+        createVote(false);
+    };
+
     const createVote = (isUpVote) => {
         PostWithoutAuth("/votes/comment", {
             userId: 2,
@@ -45,14 +53,6 @@ const Comment = (props) => {
         setUpVoteCount(upVotes.length);
         setDownVoteCount(commentVotes.length - upVotes.length);
     }, [commentVotes]);
-
-    const handleUpVoteClick = () => {
-        createVote(true);
-    };
-
-    const handleDownVoteClick = () => {
-        createVote(false);
-    };
 
   return (
     <Box style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 2 }}>

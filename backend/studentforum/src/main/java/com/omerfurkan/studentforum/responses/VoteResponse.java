@@ -11,7 +11,7 @@ public class VoteResponse {
     private Long userId;
     private Long postId;
     private Long commentId;
-    private boolean isUpvote;
+    private Boolean isUpvote;
     private LocalDateTime creationDate;
     private LocalDateTime updateDate;
 
