@@ -6,7 +6,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import colors from '../../styles/colors';
-import { PostWithoutAuth } from '../../services/HttpService';
+import { PostWithAuth } from '../../services/HttpService';
 
 const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -32,8 +32,8 @@ const Comment = (props) => {
     };
 
     const createVote = (isUpVote) => {
-        PostWithoutAuth("/votes/comment", {
-            userId: 2,
+        PostWithAuth("/votes/comment", {
+            userId: localStorage.getItem("userId"),
             commentId: commentId,
             isUpVote: isUpVote,
         })
@@ -49,7 +49,7 @@ const Comment = (props) => {
         };
 
     useEffect(() => {
-        const upVotes = commentVotes.filter((vote) => vote.upVote);
+        const upVotes = commentVotes.filter((vote) => vote.isUpvote);
         setUpVoteCount(upVotes.length);
         setDownVoteCount(commentVotes.length - upVotes.length);
     }, [commentVotes]);

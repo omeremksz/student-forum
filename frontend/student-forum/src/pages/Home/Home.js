@@ -20,15 +20,16 @@ const Home = () => {
           setPostList(result);
         },
         (error) => {
+          console.log(error)
           setIsLoaded(true);
           setError(error);
         }
     ) 
-  }
+  };
 
   useEffect(() => {
     refreshPosts();
-  },[])
+  },[]);
 
 
   if (error) {

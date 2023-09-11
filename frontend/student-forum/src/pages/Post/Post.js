@@ -16,12 +16,17 @@ import RepeatIcon from '@mui/icons-material/Repeat';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CommentIcon from '@mui/icons-material/Comment';
 import customImage from "../../images/custom-image.jpg"
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import colors from '../../styles/colors';
-import { GetWithoutAuth, PostWithoutAuth } from '../../services/HttpService';
-import { Container } from '@mui/material';
+import { GetWithoutAuth, PostWithAuth } from '../../services/HttpService';
+import { Container, DialogContentText } from '@mui/material';
 import Comment from '../Comment/Comment';
 import CommentForm from '../Comment/CommentForm';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
 
 interface ExpandMoreProps extends IconButtonProps {
     expand: boolean;
@@ -43,6 +48,12 @@ const formatDate = (dateString) => {
   return date.toLocaleDateString('en-US', options);
 };
 
+const isUserLoggedIn = () => {
+  const userId = localStorage.getItem("userId");
+  const userName = localStorage.getItem("userName");
+  const tokenKey = localStorage.getItem("tokenKey");
+  return userId && userName && tokenKey;
+};
 
 const Post = (props) => {
     const { postId, userId, userName, contentText, creationDate, postVotes } = props;
@@ -53,24 +64,36 @@ const Post = (props) => {
     const [error, setError] = useState(null);
     const isInitialMount = useRef(true);
     const [refresh, setRefresh] = useState(false);
+    const navigate = useNavigate();
 
     const formattedCreationDate = formatDate(creationDate);
     const avatarLetter = userName.charAt(0).toUpperCase();
     
     const [upVoteCount, setUpVoteCount] = useState(0);
     const [downVoteCount, setDownVoteCount] = useState(0);
+    const [commentCount, setCommentCount] = useState(0);
+
+    const [loginDialogOpen, setLoginDialogOpen] = useState(false);
 
     const handleUpVoteClick = () => {
-      createVote(true);
+      if (!isUserLoggedIn()) {
+        setLoginDialogOpen(true);
+      } else {
+        createVote(true);
+      }
     };
 
     const handleDownVoteClick = () => {
-      createVote(false);
+      if (!isUserLoggedIn()) {
+        setLoginDialogOpen(true);
+      } else {
+        createVote(false);
+      }
     };
 
     const createVote = (isUpVote) => {
-      PostWithoutAuth("/votes/post", {
-          userId: 2,
+      PostWithAuth("/votes/post", {
+          userId: localStorage.getItem("userId"),
           postId: postId,
           isUpVote: isUpVote,
       })
@@ -86,7 +109,7 @@ const Post = (props) => {
     };
 
     useEffect(() => {
-      const upVotes = postVotes.filter((vote) => vote.upVote);
+      const upVotes = postVotes.filter((vote) => vote.isUpvote);
       setUpVoteCount(upVotes.length);
       setDownVoteCount(postVotes.length - upVotes.length);
     }, [postVotes]);
@@ -96,8 +119,12 @@ const Post = (props) => {
     }
 
     const handleExpandClick = () => {
+      if (!isUserLoggedIn()) {
+        setLoginDialogOpen(true);
+      } else {
         setExpanded(!expanded);
         refreshComments();
+      }
     };
 
     const refreshComments = useCallback(() => {
@@ -121,16 +148,25 @@ const Post = (props) => {
         isInitialMount.current = false;
       } else {
         refreshComments();
+        setCommentCount(commentList.length);
       }
-    }, [refresh, refreshComments])
+    }, [refresh, refreshComments, commentList])
 
-  
     return (
       <Card sx={{ width: 500, mb: 3, mt: 3 }}>
         <CardHeader
           avatar={
             <Avatar sx={{bgcolor: red[500]}} aria-label="recipe">
-              <Link style={{textDecoration: "none", color:"white"}} to={{ pathname: '/user/' + userId }} >
+              <Link 
+                style={{textDecoration: "none", color:"white"}} 
+                to={{ pathname: '/user/' + userId }} 
+                onClick={(e) => {
+                  if (!isUserLoggedIn()) {
+                    e.preventDefault();
+                    setLoginDialogOpen(true);
+                  }
+                }}
+              >
                 {avatarLetter}
               </Link>
             </Avatar>
@@ -144,6 +180,12 @@ const Post = (props) => {
             <Link 
               style={{ textDecoration: 'none', color: 'inherit' }}
               to={{ pathname: '/user/' + userId }}
+              onClick={(e) => {
+                if (!isUserLoggedIn()) {
+                  e.preventDefault();
+                  setLoginDialogOpen(true);
+                }
+              }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.textDecoration = 'underline';
                 e.currentTarget.style.borderColor = colors.link.main;
@@ -192,23 +234,51 @@ const Post = (props) => {
             aria-expanded={expanded}
             aria-label="show more"
           >
+            <Typography style={{ color: 'black', marginRight: '0.5rem' }}>{commentCount}</Typography>
             <CommentIcon />
           </ExpandMore>
         </CardActions>
+        <Dialog open={loginDialogOpen} onClose={() => setLoginDialogOpen(false)}>
+          <DialogTitle>Login Required</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              You need to be logged in to vote or comment.
+              Would you like to log in?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setLoginDialogOpen(false)} color="primary">
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                setLoginDialogOpen(false);
+                navigate(`/auth/login`);
+              }}
+              color="primary"
+            >
+              Log In
+            </Button>
+          </DialogActions>
+        </Dialog>
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <Container >
-            {error? "error" :
-            isLoaded? commentList.map(comment => (
-              <Comment 
-                commentId = {comment.id}
-                userId = {comment.userId} 
-                userName = {comment.userName} 
-                contentText = {comment.contentText} 
-                creationDate = {comment.creationDate} 
-                commentVotes = {comment.commentVotes}
+            {error ? "error" :
+            isLoaded ? commentList.map(comment => (
+              isUserLoggedIn() ? (
+                <Comment
+                  commentId={comment.id}
+                  userId={comment.userId} 
+                  userName={comment.userName} 
+                  contentText={comment.contentText} 
+                  creationDate={comment.creationDate} 
+                  commentVotes={comment.commentVotes}
                 />
+              ) : null
             )) : "Loading"}
-            <CommentForm postId = {postId} setCommentRefresh={setCommentRefresh}/>
+            {isUserLoggedIn() && (
+              <CommentForm postId={postId} setCommentRefresh={setCommentRefresh} />
+            )}
           </Container>
         </Collapse>
       </Card>

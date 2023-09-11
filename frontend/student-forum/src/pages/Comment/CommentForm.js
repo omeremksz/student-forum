@@ -1,36 +1,36 @@
 import React, { useState } from 'react';
 import { Avatar, Box, Button, Card, CardActions, CardContent, TextField, Typography } from '@mui/material';
 import { grey, red } from '@mui/material/colors';
-import { PostWithoutAuth } from '../../services/HttpService';
+import { PostWithAuth } from '../../services/HttpService';
 
 const CommentForm = (props) => {
     const { postId, setCommentRefresh } = props;
 
     const [contentText, setContentText] = useState("");
 
-    const userId = 4;//Temporary userId until authentication
-    const userName = "shnnabdullah";//Temporary userName until authentication
+    const userName = localStorage.getItem("userName");
+    const userId = localStorage.getItem("userId")
     const avatarLetter = userName.charAt(0).toUpperCase();
 
     const handleContentText = (value) => {
         setContentText(value);
-    }
+    };
 
     const handleCommentButton = () => {
         createComment();
         setContentText("");
         setCommentRefresh();
-    }
+    };
 
     const createComment = () => {
-        PostWithoutAuth("/comments", {
+        PostWithAuth("/comments", {
             userId: userId,
             postId: postId,
             contentText: contentText,
         })
         .then((res) => res.json())
         .catch((err) => console.log(err))
-    }
+    };
 
     return (
         <Box style={{ display: 'flex', alignItems: 'flex-start', marginBottom: 2 }}>
