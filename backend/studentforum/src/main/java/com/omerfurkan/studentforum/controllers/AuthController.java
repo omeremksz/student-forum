@@ -4,6 +4,7 @@ import com.omerfurkan.studentforum.entities.User;
 import com.omerfurkan.studentforum.requests.UserCreateRequest;
 import com.omerfurkan.studentforum.requests.UserLoginRequest;
 import com.omerfurkan.studentforum.requests.UserRegisterRequest;
+import com.omerfurkan.studentforum.responses.AuthResponse;
 import com.omerfurkan.studentforum.security.JwtTokenProvider;
 import com.omerfurkan.studentforum.services.UserService;
 import org.springframework.http.HttpStatus;
@@ -31,31 +32,38 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody UserLoginRequest userLoginRequest) throws Exception {
+    public AuthResponse login(@RequestBody UserLoginRequest userLoginRequest) throws Exception {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(userLoginRequest.getUserName(), userLoginRequest.getPassword());
         Authentication authentication = authenticationManager.authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwtToken = jwtTokenProvider.generateJwtToken(authentication);
 
-        return "Bearer " + jwtToken;
+        User user = userService.getUserByUserName(userLoginRequest.getUserName());
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setId(user.getId());
+        authResponse.setUserName(user.getUserName());
+        authResponse.setAccessToken("Bearer " + jwtToken);
+
+        return authResponse;
     }
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody UserRegisterRequest userRegisterRequest) {
-        if (userService.getUserByUserName(userRegisterRequest.getUserName()) != null) {
-            return new ResponseEntity<>("Username already exists!", HttpStatus.BAD_REQUEST);
+        if (userService.getUserByUserName(userRegisterRequest.getUserName()) != null ||
+            userService.getUserByEducationalEmail(userRegisterRequest.getEducationalEmail()) != null) {
+            return new ResponseEntity<>("Username or email already exists!", HttpStatus.BAD_REQUEST);
         } else {
             User user = new User();
 
             user.setUserName(userRegisterRequest.getUserName());
             user.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
-            user.setEmail(userRegisterRequest.getEmail());
+            user.setEducationalEmail(userRegisterRequest.getEducationalEmail());
 
             UserCreateRequest userCreateRequest = new UserCreateRequest(user);
             userService.createNewUser(userCreateRequest);
 
-            return new ResponseEntity<>("User successfully  registered!", HttpStatus.CREATED);
+            return new ResponseEntity<>("User successfully registered!", HttpStatus.CREATED);
         }
 
     }

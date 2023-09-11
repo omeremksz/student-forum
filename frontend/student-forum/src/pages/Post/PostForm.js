@@ -24,7 +24,7 @@ const PostForm = () => {
         createPost();
         setContentText("");
         setContentImageURL(null);
-    }
+    };
 
     const createPost = () => {
 
@@ -36,7 +36,7 @@ const PostForm = () => {
         })
         .then((res) => res.json())
         .catch((err) => console.log(err))
-    }
+    };
 
   return (
     <Box sx={{ width:"50%" }}>

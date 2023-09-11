@@ -7,11 +7,11 @@ import lombok.Data;
 public class UserCreateRequest {
     private String userName;
     private String password;
-    private String email;
+    private String educationalEmail;
 
     public UserCreateRequest(User entity) {
         this.userName = entity.getUserName();
         this.password = entity.getPassword();
-        this.email = entity.getEmail();
+        this.educationalEmail = entity.getEducationalEmail();
     }
 }

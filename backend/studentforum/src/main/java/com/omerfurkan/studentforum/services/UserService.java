@@ -4,6 +4,8 @@ import com.omerfurkan.studentforum.entities.User;
 import com.omerfurkan.studentforum.repositories.UserRepository;
 import com.omerfurkan.studentforum.requests.UserCreateRequest;
 import com.omerfurkan.studentforum.requests.UserUpdateRequest;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -29,12 +31,18 @@ public class UserService {
         return userRepository.findByUserName(userName);
     }
 
+    public User getUserByEducationalEmail(String educationalEmail) {
+        return userRepository.findByEducationalEmail(educationalEmail);
+    }
+
     public User createNewUser(UserCreateRequest userCreateRequest) {
-        //User credentials validation
+
         User userToSave = new User();
+
         userToSave.setUserName(userCreateRequest.getUserName());
         userToSave.setPassword(userCreateRequest.getPassword());
-        userToSave.setEmail(userCreateRequest.getEmail());
+        userToSave.setEducationalEmail(userCreateRequest.getEducationalEmail());
+
         return userRepository.save(userToSave);
     }
 
@@ -46,6 +54,7 @@ public class UserService {
             userToUpdate.setUserName(userUpdateRequest.getUserName());
             userToUpdate.setPassword(userUpdateRequest.getPassword());
             userToUpdate.setEmail(userUpdateRequest.getEmail());
+            userToUpdate.setEducationalEmail(userUpdateRequest.getEducationalEmail());
 
             return userRepository.save(userToUpdate);
         } else {

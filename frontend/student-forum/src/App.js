@@ -4,6 +4,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import theme from "./styles/theme";
 import User from "./pages/Profile/User";
+import Login from "./pages/Auth/Login";
+import Register from "./pages/Auth/Register";
 
 function App() {
   return (
@@ -13,7 +15,11 @@ function App() {
           <Routes>
 
             <Route path="/" element={<Home/>}/>
+
             <Route path="/user/:userId" element={<User/>}/>
+
+            <Route path="/auth/login" element={<Login/>}/>
+            <Route path="/auth/register" element={<Register/>}/>
 
           </Routes>
         </BrowserRouter>
