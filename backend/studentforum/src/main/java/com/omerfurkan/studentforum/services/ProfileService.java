@@ -5,6 +5,7 @@ import com.omerfurkan.studentforum.entities.User;
 import com.omerfurkan.studentforum.repositories.ProfileRepository;
 import com.omerfurkan.studentforum.requests.ProfileCreateRequest;
 import com.omerfurkan.studentforum.requests.ProfileUpdateRequest;
+import com.omerfurkan.studentforum.responses.ProfileResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,8 +25,9 @@ public class ProfileService {
         return profileRepository.findAll();
     }
 
-    public Profile getProfileById(Long profileId) {
-        return profileRepository.findById(profileId).orElse(null);
+    public ProfileResponse getProfileById(Long userId) {
+        Profile profile = profileRepository.findByUserId(userId);
+        return new ProfileResponse(profile);
     }
 
     public Profile createNewProfile(ProfileCreateRequest profileCreateRequest) {
@@ -38,6 +40,7 @@ public class ProfileService {
             profileToSave.setUser(user);
             profileToSave.setFirstName(profileCreateRequest.getFirstName());
             profileToSave.setLastName(profileCreateRequest.getLastName());
+            profileToSave.setEmail(profileCreateRequest.getEmail());
             profileToSave.setProfilePictureURL(profileCreateRequest.getProfilePictureURL());
             profileToSave.setAbout(profileCreateRequest.getAbout());
 
@@ -53,6 +56,7 @@ public class ProfileService {
 
             profileToUpdate.setFirstName(profileUpdateRequest.getFirstName());
             profileToUpdate.setLastName(profileToUpdate.getLastName());
+            profileToUpdate.setEmail(profileToUpdate.getEmail());
             profileToUpdate.setProfilePictureURL(profileUpdateRequest.getProfilePictureURL());
             profileToUpdate.setAbout(profileUpdateRequest.getAbout());
 

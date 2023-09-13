@@ -3,9 +3,9 @@ import { CssBaseline } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import theme from "./styles/theme";
-import User from "./pages/Profile/User";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
+import User from "./pages/Profile/User/User";
 
 function App() {
   return (

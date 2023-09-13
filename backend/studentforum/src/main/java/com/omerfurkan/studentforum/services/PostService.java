@@ -3,13 +3,11 @@ package com.omerfurkan.studentforum.services;
 import com.omerfurkan.studentforum.entities.Post;
 import com.omerfurkan.studentforum.entities.PostPreferences;
 import com.omerfurkan.studentforum.entities.User;
-import com.omerfurkan.studentforum.entities.Vote;
 import com.omerfurkan.studentforum.repositories.PostRepository;
 import com.omerfurkan.studentforum.requests.PostCreateRequest;
 import com.omerfurkan.studentforum.requests.PostUpdateRequest;
 import com.omerfurkan.studentforum.responses.PostResponse;
 import com.omerfurkan.studentforum.responses.VoteResponse;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -31,8 +29,13 @@ public class PostService {
         this.voteService = voteService;
     }
 
-    public List<PostResponse> getAllPosts() {
-        List<Post> postList = postRepository.findAll();
+    public List<PostResponse> getAllPosts(Optional<Long> userId) {
+        List<Post> postList;
+        if (userId.isPresent()) {
+            postList = postRepository.findByUserId(userId);
+        } else {
+            postList = postRepository.findAll();
+        }
         return postList.stream().map(p -> {
             List<VoteResponse> postVotes = voteService.getAllVotes(Optional.ofNullable(null), Optional.of(p.getId()), Optional.ofNullable(null));
             return new PostResponse(p, postVotes);}).collect(Collectors.toList());
@@ -40,6 +43,12 @@ public class PostService {
 
     public Post getPostById(Long postId) {
         return postRepository.findById(postId).orElse(null);
+    }
+
+    public PostResponse getPostResponseById(Long postId){
+        Post post = postRepository.findById(postId).orElse(null);
+        List<VoteResponse> postVotes = voteService.getAllVotes(Optional.ofNullable(null), Optional.of(post.getId()), Optional.ofNullable(null));
+        return new PostResponse(post, postVotes);
     }
 
     public Post createNewPost(PostCreateRequest postCreateRequest) {
