@@ -1,0 +1,155 @@
+package com.omerfurkan.studentforum.services;
+
+import com.omerfurkan.studentforum.entities.Email;
+import com.omerfurkan.studentforum.repositories.EmailRepository;
+import com.omerfurkan.studentforum.repositories.UserRepository;
+import com.omerfurkan.studentforum.requests.EmailRequest;
+import com.spencerwi.either.Either;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.stereotype.Service;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring6.SpringTemplateEngine;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
+
+
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Service
+public class EmailService {
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Autowired
+    private SpringTemplateEngine templateEngine;
+
+    @Value("${spring.mail.username}")
+    private String from;
+
+    @Autowired
+    private EmailRepository emailRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    // TODO: ASYNC process, custom error implementation
+    public ResponseEntity<String> sendSimpleEmail(@RequestBody EmailRequest simpleEmailRequest) {
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        String subject = simpleEmailRequest.getSubject();
+        String body = simpleEmailRequest.getBody();
+        List<String> recipients = simpleEmailRequest.getRecipients();
+        String template = simpleEmailRequest.getTemplateName();
+
+        message.setFrom(from);
+        message.setSubject(subject);
+        message.setText(body);
+
+        for(String recipient: recipients) {
+            try {
+                message.setTo(recipient);
+                mailSender.send(message);
+                Email entity = new Email();
+                entity.setRecipient(recipient)
+                        .setUser(userRepository.findByEmail(recipient).orElse(null))
+                        .setTemplate(template)
+                        .setCreationDate(LocalDateTime.now());
+                emailRepository.save(entity);
+
+            } catch (Exception e) {
+                // Implement logger
+                return ResponseEntity.internalServerError().body("Error");
+            }
+        };
+        return ResponseEntity.ok("Simple emails sent successfully");
+
+
+    }
+
+    //TODO: should create a new custom error class with status code and message
+    public ResponseEntity<String> sendHtmlEmail(EmailRequest templateEmailRequest) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+
+        message.setFrom(new InternetAddress(from));
+        message.setSubject(templateEmailRequest.getSubject());
+        List<String> recipients = templateEmailRequest.getRecipients();
+        message.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(String.join(",", recipients)));
+
+        for (String recipient : recipients) {
+            Context context = new Context();
+            context.setVariables(templateEmailRequest.getVariablesOfRecipient(recipient));
+            String html = templateEngine.process(templateEmailRequest.getTemplateName(), context);
+            try {
+                message.setContent(html, "text/html; charset=utf-8");
+                mailSender.send(message);
+                Email entity = new Email();
+                entity.setRecipient(recipient)
+                        .setUser(userRepository.findByEmail(recipient).orElse(null))
+                        .setTemplate(templateEmailRequest.getTemplateName())
+                        .setCreationDate(LocalDateTime.now());
+                emailRepository.save(entity);
+
+            } catch (MessagingException e) {
+                // Implement logger
+                return ResponseEntity.internalServerError().body("Error");
+
+            }}
+        return ResponseEntity.ok("Html emails sent successfully");
+    }
+
+    public ResponseEntity<String> checkEduMailAndSendHtml(EmailRequest templateEmailRequest) throws MessagingException {
+        List<String> recipients = templateEmailRequest.getRecipients();
+        List<String> validRecipients = recipients.stream().filter(recipient ->
+                recipient.endsWith(".edu.tr") && checkMailFormat(recipient)).toList();
+        if(validRecipients.size() == 0){
+            return ResponseEntity.badRequest().body("No valid recipients");
+        }
+        List<Map<String,String>> validVariables =  templateEmailRequest.getVariables().stream().filter(map -> validRecipients.contains(map.get("recipient"))).toList();
+
+        EmailRequest newTemplateEmailRequest = new EmailRequest();
+        newTemplateEmailRequest.setRecipients(validRecipients)
+                .setSubject(templateEmailRequest.getSubject())
+                .setTemplateName(templateEmailRequest.getTemplateName())
+                .setVariables(validVariables);
+        return sendHtmlEmail(newTemplateEmailRequest);
+
+    }
+
+    public ResponseEntity<String> checkEduMailAndSendSimple(EmailRequest emailRequest){
+        List<String> recipients = emailRequest.getRecipients();
+        List<String> validRecipients = recipients.stream().filter(recipient ->
+                recipient.endsWith(".edu.tr") && checkMailFormat(recipient)).toList();
+        if(validRecipients.size() == 0){
+            return ResponseEntity.badRequest().body("No valid recipients");
+        }
+        EmailRequest newEmailRequest = new EmailRequest();
+        newEmailRequest.setRecipients(validRecipients)
+                .setSubject(emailRequest.getSubject())
+                .setBody(emailRequest.getBody());
+        return sendSimpleEmail(newEmailRequest);
+    }
+
+    public boolean checkMailFormat(String recipient){
+        return recipient.matches("^[A-Za-z0-9+_.-]+@(.+)$");
+    }
+
+
+
+
+
+}
+
