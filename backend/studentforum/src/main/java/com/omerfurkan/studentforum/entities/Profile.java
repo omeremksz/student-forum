@@ -25,6 +25,9 @@ public class Profile {
 
     @Column(name = "last_name")
     private String lastName;
+
+    private String email;
+
     @Column(name = "profile_picture_url")
     private String profilePictureURL;
     @Lob

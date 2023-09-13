@@ -53,7 +53,6 @@ public class UserService {
 
             userToUpdate.setUserName(userUpdateRequest.getUserName());
             userToUpdate.setPassword(userUpdateRequest.getPassword());
-            userToUpdate.setEmail(userUpdateRequest.getEmail());
             userToUpdate.setEducationalEmail(userUpdateRequest.getEducationalEmail());
 
             return userRepository.save(userToUpdate);

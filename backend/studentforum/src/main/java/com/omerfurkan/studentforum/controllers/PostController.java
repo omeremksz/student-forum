@@ -8,6 +8,7 @@ import com.omerfurkan.studentforum.services.PostService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/posts")
@@ -19,8 +20,8 @@ public class PostController {
     }
 
     @GetMapping
-    public List<PostResponse> getAllPosts() {
-        return postService.getAllPosts();
+    public List<PostResponse> getAllPosts(@RequestParam Optional<Long> userId) {
+        return postService.getAllPosts(userId);
     }
 
     @GetMapping("/{postId}")

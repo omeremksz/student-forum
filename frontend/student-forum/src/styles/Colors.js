@@ -1,4 +1,10 @@
+import { lightBlue } from "@mui/material/colors"
+
 const Colors = {
+    sidebar: {
+        lighterBlue: lightBlue[800],
+        midNightBlue: "#003366",
+    },
     button: {
         lighterGray: "#E0E0E0",
         darkerBlue: "#005ba1",

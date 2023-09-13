@@ -2,6 +2,7 @@ package com.omerfurkan.studentforum.responses;
 
 import com.omerfurkan.studentforum.entities.Post;
 import com.omerfurkan.studentforum.entities.Vote;
+import com.omerfurkan.studentforum.services.PostService;
 import lombok.Data;
 
 import java.time.LocalDateTime;

@@ -1,16 +1,22 @@
 package com.omerfurkan.studentforum.responses;
 
+import com.omerfurkan.studentforum.entities.Comment;
+import com.omerfurkan.studentforum.entities.Post;
 import com.omerfurkan.studentforum.entities.Vote;
+import com.omerfurkan.studentforum.services.PostService;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
 @Data
 public class VoteResponse {
+
     private Long id;
     private Long userId;
-    private Long postId;
-    private Long commentId;
+    private Post post;
+    private Comment comment;
     private Boolean isUpvote;
     private LocalDateTime creationDate;
     private LocalDateTime updateDate;
@@ -23,11 +29,11 @@ public class VoteResponse {
         this.updateDate = entity.getUpdateDate();
 
         if (entity.getPost() != null) {
-            this.postId = entity.getPost().getId();
+            this.post = entity.getPost();
         }
 
         if (entity.getComment() != null) {
-            this.commentId = entity.getComment().getId();
+            this.comment = entity.getComment();
         }
     }
 }
