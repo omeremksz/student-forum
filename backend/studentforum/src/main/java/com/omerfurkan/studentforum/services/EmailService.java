@@ -4,7 +4,6 @@ import com.omerfurkan.studentforum.entities.Email;
 import com.omerfurkan.studentforum.repositories.EmailRepository;
 import com.omerfurkan.studentforum.repositories.UserRepository;
 import com.omerfurkan.studentforum.requests.EmailRequest;
-import com.spencerwi.either.Either;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
