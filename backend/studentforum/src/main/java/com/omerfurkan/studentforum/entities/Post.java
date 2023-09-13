@@ -31,8 +31,8 @@ public class Post {
     @Lob
     @Column(name ="content_text", columnDefinition = "text")
     private String contentText;
-    @Column(name ="content_picture_url")
-    private String contentPictureURL;
+    @Column(name ="content_image_url")
+    private String contentImageURL;
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
     @Column(name = "update_date")

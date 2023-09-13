@@ -3,10 +3,12 @@ package com.omerfurkan.studentforum.controllers;
 import com.omerfurkan.studentforum.entities.Comment;
 import com.omerfurkan.studentforum.requests.CommentCreateRequest;
 import com.omerfurkan.studentforum.requests.CommentUpdateRequest;
+import com.omerfurkan.studentforum.responses.CommentResponse;
 import com.omerfurkan.studentforum.services.CommentService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/comments")
@@ -18,8 +20,8 @@ public class CommentController {
     }
 
     @GetMapping
-    public List<Comment> getAllComments() {
-        return commentService.getAllComments();
+    public List<CommentResponse> getAllComments(@RequestParam Optional<Long> userId, @RequestParam Optional<Long> postId) {
+        return commentService.getAllComments(userId, postId);
     }
 
     @GetMapping("/{commentId}")

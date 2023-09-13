@@ -6,6 +6,7 @@ import lombok.Data;
 public class VoteCreateRequest {
     private Long userId;
     private Long postId;
+    private Long commentId;
     private Boolean isUpVote;
 }
 

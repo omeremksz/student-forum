@@ -3,6 +3,7 @@ package com.omerfurkan.studentforum.controllers;
 import com.omerfurkan.studentforum.entities.Post;
 import com.omerfurkan.studentforum.requests.PostCreateRequest;
 import com.omerfurkan.studentforum.requests.PostUpdateRequest;
+import com.omerfurkan.studentforum.responses.PostResponse;
 import com.omerfurkan.studentforum.services.PostService;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,7 @@ public class PostController {
     }
 
     @GetMapping
-    public List<Post> getAllPosts() {
+    public List<PostResponse> getAllPosts() {
         return postService.getAllPosts();
     }
 
