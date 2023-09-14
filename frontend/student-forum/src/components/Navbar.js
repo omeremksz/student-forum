@@ -1,7 +1,7 @@
 import { React, useState } from 'react'
 import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography, } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import colors from '../styles/colors';
+import colors from '../styles/Colors';
 import { Link, useNavigate } from 'react-router-dom';
 import GroupsIcon from '@mui/icons-material/Groups';
 

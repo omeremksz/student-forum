@@ -2,10 +2,10 @@ import { ThemeProvider } from "@emotion/react";
 import { CssBaseline } from "@mui/material";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home/Home";
-import theme from "./styles/theme";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import User from "./pages/Profile/User/User";
+import theme from "./styles/Theme";
 
 function App() {
   return (
