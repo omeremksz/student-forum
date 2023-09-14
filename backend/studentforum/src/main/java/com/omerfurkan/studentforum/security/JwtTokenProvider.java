@@ -1,14 +1,18 @@
 package com.omerfurkan.studentforum.security;
 
-import io.jsonwebtoken.*;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Component;
-
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
 import java.security.SignatureException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
 
 
 @Component
@@ -21,11 +25,11 @@ public class JwtTokenProvider {
         Instant now = Instant.now();
 
         return Jwts.builder()
-                .setSubject(Long.toString(userDetails.getId()))
-                .setIssuedAt(new Date())
-                .setExpiration(Date.from(now.plus(60, ChronoUnit.MINUTES)))
-                .signWith(SignatureAlgorithm.HS512, APP_SECRET)
-                .compact();
+            .setSubject(Long.toString(userDetails.getId()))
+            .setIssuedAt(new Date())
+            .setExpiration(Date.from(now.plus(60, ChronoUnit.MINUTES)))
+            .signWith(SignatureAlgorithm.HS512, APP_SECRET)
+            .compact();
     }
 
     public Long getUserIdFromJwt(String token) throws Exception {

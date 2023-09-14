@@ -6,10 +6,9 @@ import com.omerfurkan.studentforum.repositories.ProfileRepository;
 import com.omerfurkan.studentforum.requests.ProfileCreateRequest;
 import com.omerfurkan.studentforum.requests.ProfileUpdateRequest;
 import com.omerfurkan.studentforum.responses.ProfileResponse;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class ProfileService {

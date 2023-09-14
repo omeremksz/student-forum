@@ -5,11 +5,10 @@ import com.omerfurkan.studentforum.entities.User;
 import com.omerfurkan.studentforum.repositories.DirectMessageRepository;
 import com.omerfurkan.studentforum.requests.DirectMessageCreateRequest;
 import com.omerfurkan.studentforum.requests.DirectMessageUpdateRequest;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class DirectMessageService {

@@ -3,12 +3,8 @@ package com.omerfurkan.studentforum.responses;
 import com.omerfurkan.studentforum.entities.Comment;
 import com.omerfurkan.studentforum.entities.Post;
 import com.omerfurkan.studentforum.entities.Vote;
-import com.omerfurkan.studentforum.services.PostService;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
+import lombok.Data;
 
 @Data
 public class VoteResponse {

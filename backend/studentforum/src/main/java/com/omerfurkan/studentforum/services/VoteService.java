@@ -9,13 +9,12 @@ import com.omerfurkan.studentforum.repositories.VoteRepository;
 import com.omerfurkan.studentforum.requests.VoteCreateRequest;
 import com.omerfurkan.studentforum.requests.VoteUpdateRequest;
 import com.omerfurkan.studentforum.responses.VoteResponse;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
 
 @Service
 public class VoteService {
@@ -32,7 +31,7 @@ public class VoteService {
         this.commentService = commentService;
     }
 
-    public List<VoteResponse> getAllVotes(Optional<Long> userId, Optional<Long> postId, Optional<Long> commentId){
+    public List<VoteResponse> getAllVotes(Optional<Long> userId, Optional<Long> postId, Optional<Long> commentId) {
         List<Vote> voteList;
         if (userId.isPresent() && postId.isPresent() && commentId.isPresent()) {
             voteList = voteRepository.findByUserIdAndPostIdAndCommentId(userId.get(), postId.get(), commentId.get());
@@ -49,11 +48,12 @@ public class VoteService {
         }
         return voteList.stream().map(v -> new VoteResponse(v)).collect(Collectors.toList());
     }
-    public Vote getVoteById(Long voteId){
+
+    public Vote getVoteById(Long voteId) {
         return voteRepository.findById(voteId).orElse(null);
     }
 
-    public Vote createNewPostVote(VoteCreateRequest voteCreateRequest){
+    public Vote createNewPostVote(VoteCreateRequest voteCreateRequest) {
         User user = userService.getUserById(voteCreateRequest.getUserId());
         Post post = postService.getPostById(voteCreateRequest.getPostId());
 
@@ -88,10 +88,11 @@ public class VoteService {
             return voteRepository.save(voteToSave);
         }
     }
-    public Vote updateVoteById(Long voteId, VoteUpdateRequest voteUpdateRequest){
+
+    public Vote updateVoteById(Long voteId, VoteUpdateRequest voteUpdateRequest) {
         Optional<Vote> vote = voteRepository.findById(voteId);
 
-        if (vote.isPresent()){
+        if (vote.isPresent()) {
             Vote voteToUpdate = vote.get();
 
             voteToUpdate.setIsUpvote(voteUpdateRequest.getIsUpVote());
@@ -103,7 +104,7 @@ public class VoteService {
         }
     }
 
-    public void deleteVoteById(Long voteId){
+    public void deleteVoteById(Long voteId) {
         voteRepository.deleteById(voteId);
     }
 }

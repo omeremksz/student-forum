@@ -20,7 +20,7 @@ public class EmailController {
 
 
     @PostMapping("/simple")
-    public ResponseEntity<String> sendSimpleEmail(@RequestBody EmailRequest simpleEmailRequest){
+    public ResponseEntity<String> sendSimpleEmail(@RequestBody EmailRequest simpleEmailRequest) {
         return emailService.sendSimpleEmail(simpleEmailRequest);
     }
 
@@ -28,9 +28,6 @@ public class EmailController {
     public ResponseEntity<String> sendHtmlEmail(@RequestBody EmailRequest htmlEmailRequest) throws MessagingException {
         return emailService.sendHtmlEmail(htmlEmailRequest);
     }
-
-
-
 
 
 }

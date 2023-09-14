@@ -5,11 +5,10 @@ import com.omerfurkan.studentforum.entities.User;
 import com.omerfurkan.studentforum.repositories.SearchHistoryRepository;
 import com.omerfurkan.studentforum.requests.SearchHistoryCreateRequest;
 import com.omerfurkan.studentforum.requests.SearchHistoryUpdateRequest;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class SearchHistoryService {

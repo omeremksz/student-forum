@@ -5,11 +5,10 @@ import com.omerfurkan.studentforum.entities.UserInteraction;
 import com.omerfurkan.studentforum.repositories.UserInteractionRepository;
 import com.omerfurkan.studentforum.requests.UserInteractionCreateRequest;
 import com.omerfurkan.studentforum.requests.UserInteractionUpdateRequest;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserInteractionService {
