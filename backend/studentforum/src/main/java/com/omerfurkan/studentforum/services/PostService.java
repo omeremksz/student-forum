@@ -3,9 +3,11 @@ package com.omerfurkan.studentforum.services;
 import com.omerfurkan.studentforum.entities.Post;
 import com.omerfurkan.studentforum.entities.PostPreferences;
 import com.omerfurkan.studentforum.entities.User;
+import com.omerfurkan.studentforum.entities.Vote;
 import com.omerfurkan.studentforum.repositories.PostRepository;
 import com.omerfurkan.studentforum.requests.PostCreateRequest;
 import com.omerfurkan.studentforum.requests.PostUpdateRequest;
+import com.omerfurkan.studentforum.requests.UserInteractionCreateRequest;
 import com.omerfurkan.studentforum.responses.PostResponse;
 import com.omerfurkan.studentforum.responses.VoteResponse;
 import org.springframework.stereotype.Service;
@@ -21,12 +23,14 @@ public class PostService {
     private PostPreferencesService postPreferencesService;
     private UserService userService;
     private VoteService voteService;
+    private UserInteractionService userInteractionService;
 
-    public PostService(PostRepository postRepository, PostPreferencesService postPreferencesService, UserService userService, VoteService voteService) {
+    public PostService(PostRepository postRepository, PostPreferencesService postPreferencesService, UserService userService, VoteService voteService, UserInteractionService userInteractionService) {
         this.postRepository = postRepository;
         this.postPreferencesService = postPreferencesService;
         this.userService = userService;
         this.voteService = voteService;
+        this.userInteractionService = userInteractionService;
     }
 
     public List<PostResponse> getAllPosts(Optional<Long> userId) {
@@ -45,12 +49,6 @@ public class PostService {
         return postRepository.findById(postId).orElse(null);
     }
 
-    public PostResponse getPostResponseById(Long postId){
-        Post post = postRepository.findById(postId).orElse(null);
-        List<VoteResponse> postVotes = voteService.getAllVotes(Optional.ofNullable(null), Optional.of(post.getId()), Optional.ofNullable(null));
-        return new PostResponse(post, postVotes);
-    }
-
     public Post createNewPost(PostCreateRequest postCreateRequest) {
         User user = userService.getUserById(postCreateRequest.getUserId());
         PostPreferences postPreferences = postPreferencesService.getPostPreferencesById(postCreateRequest.getPostPreferencesId());
@@ -67,8 +65,24 @@ public class PostService {
             postToSave.setCreationDate(LocalDateTime.now());
             postToSave.setUpdateDate(LocalDateTime.now());
 
-            return postRepository.save(postToSave);
+            postRepository.save(postToSave);
+
+            UserInteractionCreateRequest userInteractionCreateRequest = getUserPostInteractionCreateRequest(user, postToSave);
+
+            userInteractionService.createNewUserPostInteraction(userInteractionCreateRequest);
+
+            return postToSave;
         }
+    }
+
+    private static UserInteractionCreateRequest getUserPostInteractionCreateRequest(User user, Post postToSave) {
+        UserInteractionCreateRequest userInteractionCreateRequest = new UserInteractionCreateRequest();
+
+        userInteractionCreateRequest.setUserId(user.getId());
+        userInteractionCreateRequest.setReferenceId(postToSave.getId());
+        userInteractionCreateRequest.setReferenceType("global");
+
+        return userInteractionCreateRequest;
     }
 
     public Post updatePostById(Long postId, PostUpdateRequest postUpdateRequest) {

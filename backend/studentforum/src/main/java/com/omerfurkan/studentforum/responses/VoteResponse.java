@@ -15,8 +15,8 @@ public class VoteResponse {
 
     private Long id;
     private Long userId;
-    private Post post;
-    private Comment comment;
+    private Long post_id;
+    private Long comment_id;
     private Boolean isUpvote;
     private LocalDateTime creationDate;
     private LocalDateTime updateDate;
@@ -29,11 +29,11 @@ public class VoteResponse {
         this.updateDate = entity.getUpdateDate();
 
         if (entity.getPost() != null) {
-            this.post = entity.getPost();
+            this.post_id = entity.getPost().getId();
         }
 
         if (entity.getComment() != null) {
-            this.comment = entity.getComment();
+            this.comment_id = entity.getComment().getId();
         }
     }
 }
