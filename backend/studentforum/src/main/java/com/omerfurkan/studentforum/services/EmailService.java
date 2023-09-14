@@ -1,5 +1,7 @@
 package com.omerfurkan.studentforum.services;
 
+
+import com.google.common.flogger.FluentLogger;
 import com.omerfurkan.studentforum.entities.Email;
 import com.omerfurkan.studentforum.repositories.EmailRepository;
 import com.omerfurkan.studentforum.repositories.UserRepository;
@@ -43,6 +45,9 @@ public class EmailService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private FluentLogger logger;
+
     // TODO: ASYNC process, custom error implementation
     public ResponseEntity<String> sendSimpleEmail(@RequestBody EmailRequest simpleEmailRequest) {
 
@@ -68,8 +73,8 @@ public class EmailService {
                 emailRepository.save(entity);
 
             } catch (Exception e) {
-                // Implement logger
-                return ResponseEntity.internalServerError().body("Error");
+                logger.atSevere().withCause(e).log("Error sending simple email to %s:", recipient);
+                return ResponseEntity.internalServerError().body("Error sending email to " + recipient);
             }
         }
         ;
@@ -102,7 +107,7 @@ public class EmailService {
                 emailRepository.save(entity);
 
             } catch (MessagingException e) {
-                // Implement logger
+                logger.atSevere().withCause(e).log("Error sending html email to %s:", recipient);
                 return ResponseEntity.internalServerError().body("Error");
 
             }
