@@ -64,7 +64,7 @@ public class EmailService {
                 mailSender.send(message);
                 Email entity = new Email();
                 entity.setRecipient(recipient)
-                        .setUser(userRepository.findByEmail(recipient).orElse(null))
+                        .setUser(userRepository.findByEducationalEmail(recipient))
                         .setTemplate(template)
                         .setCreationDate(LocalDateTime.now());
                 emailRepository.save(entity);
@@ -97,7 +97,7 @@ public class EmailService {
                 mailSender.send(message);
                 Email entity = new Email();
                 entity.setRecipient(recipient)
-                        .setUser(userRepository.findByEmail(recipient).orElse(null))
+                        .setUser(userRepository.findByEducationalEmail(recipient))
                         .setTemplate(templateEmailRequest.getTemplateName())
                         .setCreationDate(LocalDateTime.now());
                 emailRepository.save(entity);

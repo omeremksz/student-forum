@@ -98,7 +98,40 @@
 					</excludes>
 				</configuration>
 			</plugin>
+		<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-checkstyle-plugin</artifactId>
+			<version>3.2.1</version>
+			<configuration>
+				<consoleOutput>true</consoleOutput>
+				<includeTestSourceDirectory>true</includeTestSourceDirectory>
+				<failOnViolation>true</failOnViolation>
+				<failsOnError>true</failsOnError>
+				<configLocation>config/checkstyle/checkstyle.xml</configLocation>
+				<suppressionsLocation>config/checkstyle/suppressions.xml</suppressionsLocation>
+				<suppressionsFileExpression>suppressions.xml</suppressionsFileExpression>
+			</configuration>
+			<dependencies>
+				<dependency>
+					<groupId>com.puppycrawl.tools</groupId>
+					<artifactId>checkstyle</artifactId>
+					<version>10.9.1</version>
+				</dependency>
+			</dependencies>
+			<executions>
+				<execution>
+					<id>validate</id>
+					<phase>validate</phase>
+					<goals>
+						<goal>check</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
+
 		</plugins>
+
+
 	</build>
 
 </project>
