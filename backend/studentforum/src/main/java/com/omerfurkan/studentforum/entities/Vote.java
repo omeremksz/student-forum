@@ -30,14 +30,15 @@ public class Vote {
     @JsonIgnore
     private User user;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "post_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="post_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Post post;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "comment_id")
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="comment_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Comment comment;

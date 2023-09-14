@@ -12,6 +12,26 @@ const CommentActivity = (props) => {
 
     const formattedCreationDate = formatDate(creationDate);
 
+    const maxCharacters = 200;
+
+    let truncatedContent = contentText;
+    let lastSpacePosition = -1;
+
+    if (contentText.length > maxCharacters) {
+      for (let i = maxCharacters - 1; i >= 0; i--) {
+        if (contentText.charAt(i) === ' ') {
+          lastSpacePosition = i;
+          break;
+        }
+      }
+
+      if (lastSpacePosition !== -1) {
+        truncatedContent = contentText.substring(0, lastSpacePosition) + ' ...';
+      } else {
+        truncatedContent = contentText.substring(0, maxCharacters) + ' ...';
+      }
+    }
+
   return (
     <Card variant="outlined" sx={{ marginBottom: 2, width: '100%', }}>
         <CardContent sx={{ display: 'flex', flexDirection: 'row', alignItems: 'flex-start' }}>
@@ -20,7 +40,7 @@ const CommentActivity = (props) => {
                 {firstName} {lastName} commented on a post | {formattedCreationDate}
             </Typography>
             <Typography  sx={{ mb: '10px' }} variant="body2" color="black">
-                {contentText}
+                {truncatedContent}
             </Typography>
             </Box>
         </CardContent>
