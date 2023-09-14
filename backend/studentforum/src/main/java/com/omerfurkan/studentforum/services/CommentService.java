@@ -8,14 +8,12 @@ import com.omerfurkan.studentforum.requests.CommentCreateRequest;
 import com.omerfurkan.studentforum.requests.CommentUpdateRequest;
 import com.omerfurkan.studentforum.requests.UserInteractionCreateRequest;
 import com.omerfurkan.studentforum.responses.CommentResponse;
-import com.omerfurkan.studentforum.responses.PostResponse;
 import com.omerfurkan.studentforum.responses.VoteResponse;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class CommentService {
@@ -46,7 +44,8 @@ public class CommentService {
         }
         return commentList.stream().map(c -> {
             List<VoteResponse> commentVotes = voteService.getAllVotes(Optional.ofNullable(null), Optional.ofNullable(null), Optional.of(c.getId()));
-            return new CommentResponse(c, commentVotes);}).collect(Collectors.toList());
+            return new CommentResponse(c, commentVotes);
+        }).collect(Collectors.toList());
     }
 
     public Comment getCommentById(Long commentId) {
@@ -57,7 +56,7 @@ public class CommentService {
         User user = userService.getUserById(commentCreateRequest.getUserId());
         Post post = postService.getPostById(commentCreateRequest.getPostId());
 
-        if (user == null || post == null ){
+        if (user == null || post == null) {
             return null;
         } else {
             Comment commentToSave = new Comment();

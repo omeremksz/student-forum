@@ -4,6 +4,7 @@ import com.omerfurkan.studentforum.entities.*;
 import com.omerfurkan.studentforum.repositories.UserInteractionRepository;
 import com.omerfurkan.studentforum.requests.UserInteractionCreateRequest;
 import com.omerfurkan.studentforum.requests.UserInteractionUpdateRequest;
+
 import com.omerfurkan.studentforum.responses.CommentResponse;
 import com.omerfurkan.studentforum.responses.PostResponse;
 import com.omerfurkan.studentforum.responses.VoteResponse;
@@ -14,6 +15,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class UserInteractionService {

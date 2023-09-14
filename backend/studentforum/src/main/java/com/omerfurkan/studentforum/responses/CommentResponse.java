@@ -1,11 +1,9 @@
 package com.omerfurkan.studentforum.responses;
 
 import com.omerfurkan.studentforum.entities.Comment;
-import com.omerfurkan.studentforum.entities.Post;
-import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class CommentResponse {

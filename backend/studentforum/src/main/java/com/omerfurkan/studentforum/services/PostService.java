@@ -10,12 +10,11 @@ import com.omerfurkan.studentforum.requests.PostUpdateRequest;
 import com.omerfurkan.studentforum.requests.UserInteractionCreateRequest;
 import com.omerfurkan.studentforum.responses.PostResponse;
 import com.omerfurkan.studentforum.responses.VoteResponse;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.springframework.stereotype.Service;
 
 @Service
 public class PostService {
@@ -25,7 +24,8 @@ public class PostService {
     private VoteService voteService;
     private UserInteractionService userInteractionService;
 
-    public PostService(PostRepository postRepository, PostPreferencesService postPreferencesService, UserService userService, VoteService voteService, UserInteractionService userInteractionService) {
+  public PostService(PostRepository postRepository, PostPreferencesService postPreferencesService, UserService userService, 
+                       VoteService voteService, UserInteractionService userInteractionService) {
         this.postRepository = postRepository;
         this.postPreferencesService = postPreferencesService;
         this.userService = userService;
@@ -42,11 +42,19 @@ public class PostService {
         }
         return postList.stream().map(p -> {
             List<VoteResponse> postVotes = voteService.getAllVotes(Optional.ofNullable(null), Optional.of(p.getId()), Optional.ofNullable(null));
-            return new PostResponse(p, postVotes);}).collect(Collectors.toList());
+            return new PostResponse(p, postVotes);
+        }).collect(Collectors.toList());
     }
 
     public Post getPostById(Long postId) {
         return postRepository.findById(postId).orElse(null);
+    }
+
+
+    public PostResponse getPostResponseById(Long postId) {
+        Post post = postRepository.findById(postId).orElse(null);
+        List<VoteResponse> postVotes = voteService.getAllVotes(Optional.ofNullable(null), Optional.of(post.getId()), Optional.ofNullable(null));
+        return new PostResponse(post, postVotes);
     }
 
     public Post createNewPost(PostCreateRequest postCreateRequest) {
