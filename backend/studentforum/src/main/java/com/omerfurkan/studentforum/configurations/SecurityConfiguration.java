@@ -66,19 +66,19 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .authorizeRequests()
-                .requestMatchers("/auth/**", "/posts/**", "/comments/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
-                .csrf(csrf -> csrf.disable())
-                .cors()
-                .and()
-                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                .and()
-                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .httpBasic(Customizer.withDefaults());
+            .authorizeRequests()
+            .requestMatchers("/auth/**", "/posts/**", "/comments/**")
+            .permitAll()
+            .anyRequest()
+            .authenticated()
+            .and()
+            .csrf(csrf -> csrf.disable())
+            .cors()
+            .and()
+            .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
+            .and()
+            .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .httpBasic(Customizer.withDefaults());
 
         httpSecurity.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();

@@ -7,22 +7,20 @@ import com.omerfurkan.studentforum.requests.EmailRequest;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.stereotype.Service;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-
 
 
 @AllArgsConstructor
@@ -58,22 +56,23 @@ public class EmailService {
         message.setSubject(subject);
         message.setText(body);
 
-        for(String recipient: recipients) {
+        for (String recipient : recipients) {
             try {
                 message.setTo(recipient);
                 mailSender.send(message);
                 Email entity = new Email();
                 entity.setRecipient(recipient)
-                        .setUser(userRepository.findByEmail(recipient).orElse(null))
-                        .setTemplate(template)
-                        .setCreationDate(LocalDateTime.now());
+                    .setUser(userRepository.findByEducationalEmail(recipient))
+                    .setTemplate(template)
+                    .setCreationDate(LocalDateTime.now());
                 emailRepository.save(entity);
 
             } catch (Exception e) {
                 // Implement logger
                 return ResponseEntity.internalServerError().body("Error");
             }
-        };
+        }
+        ;
         return ResponseEntity.ok("Simple emails sent successfully");
 
 
@@ -97,57 +96,56 @@ public class EmailService {
                 mailSender.send(message);
                 Email entity = new Email();
                 entity.setRecipient(recipient)
-                        .setUser(userRepository.findByEmail(recipient).orElse(null))
-                        .setTemplate(templateEmailRequest.getTemplateName())
-                        .setCreationDate(LocalDateTime.now());
+                    .setUser(userRepository.findByEducationalEmail(recipient))
+                    .setTemplate(templateEmailRequest.getTemplateName())
+                    .setCreationDate(LocalDateTime.now());
                 emailRepository.save(entity);
 
             } catch (MessagingException e) {
                 // Implement logger
                 return ResponseEntity.internalServerError().body("Error");
 
-            }}
+            }
+        }
         return ResponseEntity.ok("Html emails sent successfully");
     }
 
     public ResponseEntity<String> checkEduMailAndSendHtml(EmailRequest templateEmailRequest) throws MessagingException {
         List<String> recipients = templateEmailRequest.getRecipients();
         List<String> validRecipients = recipients.stream().filter(recipient ->
-                recipient.endsWith(".edu.tr") && checkMailFormat(recipient)).toList();
-        if(validRecipients.size() == 0){
+            recipient.endsWith(".edu.tr") && checkMailFormat(recipient)).toList();
+        if (validRecipients.size() == 0) {
             return ResponseEntity.badRequest().body("No valid recipients");
         }
-        List<Map<String,String>> validVariables =  templateEmailRequest.getVariables().stream().filter(map -> validRecipients.contains(map.get("recipient"))).toList();
+        List<Map<String, String>> validVariables =
+            templateEmailRequest.getVariables().stream().filter(map -> validRecipients.contains(map.get("recipient"))).toList();
 
         EmailRequest newTemplateEmailRequest = new EmailRequest();
         newTemplateEmailRequest.setRecipients(validRecipients)
-                .setSubject(templateEmailRequest.getSubject())
-                .setTemplateName(templateEmailRequest.getTemplateName())
-                .setVariables(validVariables);
+            .setSubject(templateEmailRequest.getSubject())
+            .setTemplateName(templateEmailRequest.getTemplateName())
+            .setVariables(validVariables);
         return sendHtmlEmail(newTemplateEmailRequest);
 
     }
 
-    public ResponseEntity<String> checkEduMailAndSendSimple(EmailRequest emailRequest){
+    public ResponseEntity<String> checkEduMailAndSendSimple(EmailRequest emailRequest) {
         List<String> recipients = emailRequest.getRecipients();
         List<String> validRecipients = recipients.stream().filter(recipient ->
-                recipient.endsWith(".edu.tr") && checkMailFormat(recipient)).toList();
-        if(validRecipients.size() == 0){
+            recipient.endsWith(".edu.tr") && checkMailFormat(recipient)).toList();
+        if (validRecipients.size() == 0) {
             return ResponseEntity.badRequest().body("No valid recipients");
         }
         EmailRequest newEmailRequest = new EmailRequest();
         newEmailRequest.setRecipients(validRecipients)
-                .setSubject(emailRequest.getSubject())
-                .setBody(emailRequest.getBody());
+            .setSubject(emailRequest.getSubject())
+            .setBody(emailRequest.getBody());
         return sendSimpleEmail(newEmailRequest);
     }
 
-    public boolean checkMailFormat(String recipient){
+    public boolean checkMailFormat(String recipient) {
         return recipient.matches("^[A-Za-z0-9+_.-]+@(.+)$");
     }
-
-
-
 
 
 }

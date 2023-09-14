@@ -4,10 +4,9 @@ import com.omerfurkan.studentforum.entities.PostPreferences;
 import com.omerfurkan.studentforum.repositories.PostPreferencesRepository;
 import com.omerfurkan.studentforum.requests.PostPreferencesCreateRequest;
 import com.omerfurkan.studentforum.requests.PostPreferencesUpdateRequest;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
+import org.springframework.stereotype.Service;
 
 @Service
 public class PostPreferencesService {
@@ -42,7 +41,7 @@ public class PostPreferencesService {
             PostPreferences postPreferencesToUpdate = postPreferences.get();
 
             if (postPreferencesUpdateRequest.getInteractionEnvironment() == null &&
-                    postPreferencesUpdateRequest.getPostCategory() == null) {
+                postPreferencesUpdateRequest.getPostCategory() == null) {
                 return postPreferencesRepository.save(postPreferencesToUpdate);
             } else if (postPreferencesUpdateRequest.getInteractionEnvironment() == null) {
                 postPreferencesToUpdate.setPostCategory(postPreferencesUpdateRequest.getPostCategory());
