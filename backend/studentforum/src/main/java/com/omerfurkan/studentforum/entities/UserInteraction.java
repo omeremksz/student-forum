@@ -30,19 +30,19 @@ public class UserInteraction {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="post_id")
+    @JoinColumn(name = "post_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="comment_id")
+    @JoinColumn(name = "comment_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Comment comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="vote_id")
+    @JoinColumn(name = "vote_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Vote vote;

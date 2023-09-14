@@ -1,24 +1,21 @@
 package com.omerfurkan.studentforum.services;
 
-import com.omerfurkan.studentforum.entities.*;
+import com.omerfurkan.studentforum.entities.Comment;
+import com.omerfurkan.studentforum.entities.Post;
+import com.omerfurkan.studentforum.entities.User;
+import com.omerfurkan.studentforum.entities.UserInteraction;
+import com.omerfurkan.studentforum.entities.Vote;
 import com.omerfurkan.studentforum.repositories.UserInteractionRepository;
 import com.omerfurkan.studentforum.requests.UserInteractionCreateRequest;
 import com.omerfurkan.studentforum.requests.UserInteractionUpdateRequest;
-
 import com.omerfurkan.studentforum.responses.CommentResponse;
 import com.omerfurkan.studentforum.responses.PostResponse;
 import com.omerfurkan.studentforum.responses.VoteResponse;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -29,7 +26,8 @@ public class UserInteractionService {
     private CommentService commentService;
     private VoteService voteService;
 
-    public UserInteractionService(UserInteractionRepository userInteractionRepository, UserService userService, @Lazy PostService postService, @Lazy CommentService commentService, @Lazy VoteService voteService) {
+    public UserInteractionService(UserInteractionRepository userInteractionRepository, UserService userService, @Lazy PostService postService,
+                                  @Lazy CommentService commentService, @Lazy VoteService voteService) {
         this.userInteractionRepository = userInteractionRepository;
         this.userService = userService;
         this.postService = postService;
@@ -49,24 +47,26 @@ public class UserInteractionService {
         List<UserInteraction> userPostInteractions = userInteractionRepository.findByUserIdAndPostIsNotNull(userId);
 
         List<Post> userPostList = userPostInteractions.stream()
-                .map(i -> postService.getPostById(i.getReferenceId()))
-                .collect(Collectors.toList());
+            .map(i -> postService.getPostById(i.getReferenceId()))
+            .collect(Collectors.toList());
 
         return userPostList.stream().map(p -> {
             List<VoteResponse> postVotes = voteService.getAllVotes(Optional.ofNullable(null), Optional.of(p.getId()), Optional.ofNullable(null));
-            return new PostResponse(p, postVotes);}).collect(Collectors.toList());
+            return new PostResponse(p, postVotes);
+        }).collect(Collectors.toList());
     }
 
     public List<CommentResponse> getUserCommentInteractionByUserId(Long userId) {
         List<UserInteraction> userCommentInteractions = userInteractionRepository.findByUserIdAndCommentIsNotNull(userId);
 
         List<Comment> userCommentList = userCommentInteractions.stream()
-                .map(i -> commentService.getCommentById(i.getReferenceId()))
-                .collect(Collectors.toList());
+            .map(i -> commentService.getCommentById(i.getReferenceId()))
+            .collect(Collectors.toList());
 
         return userCommentList.stream().map(c -> {
             List<VoteResponse> commentVotes = voteService.getAllVotes(Optional.ofNullable(null), Optional.ofNullable(null), Optional.of(c.getId()));
-            return new CommentResponse(c, commentVotes);}).collect(Collectors.toList());
+            return new CommentResponse(c, commentVotes);
+        }).collect(Collectors.toList());
     }
 
     public UserInteraction createNewUserPostInteraction(UserInteractionCreateRequest userInteractionCreateRequest) {

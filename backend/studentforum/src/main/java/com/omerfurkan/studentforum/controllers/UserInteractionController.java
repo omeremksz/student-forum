@@ -5,7 +5,6 @@ import com.omerfurkan.studentforum.requests.UserInteractionCreateRequest;
 import com.omerfurkan.studentforum.requests.UserInteractionUpdateRequest;
 import com.omerfurkan.studentforum.responses.CommentResponse;
 import com.omerfurkan.studentforum.responses.PostResponse;
-import com.omerfurkan.studentforum.responses.VoteResponse;
 import com.omerfurkan.studentforum.services.UserInteractionService;
 import java.util.List;
 import org.springframework.web.bind.annotation.DeleteMapping;

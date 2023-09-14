@@ -3,7 +3,6 @@ package com.omerfurkan.studentforum.services;
 import com.omerfurkan.studentforum.entities.Post;
 import com.omerfurkan.studentforum.entities.PostPreferences;
 import com.omerfurkan.studentforum.entities.User;
-import com.omerfurkan.studentforum.entities.Vote;
 import com.omerfurkan.studentforum.repositories.PostRepository;
 import com.omerfurkan.studentforum.requests.PostCreateRequest;
 import com.omerfurkan.studentforum.requests.PostUpdateRequest;
@@ -24,7 +23,7 @@ public class PostService {
     private VoteService voteService;
     private UserInteractionService userInteractionService;
 
-  public PostService(PostRepository postRepository, PostPreferencesService postPreferencesService, UserService userService, 
+    public PostService(PostRepository postRepository, PostPreferencesService postPreferencesService, UserService userService,
                        VoteService voteService, UserInteractionService userInteractionService) {
         this.postRepository = postRepository;
         this.postPreferencesService = postPreferencesService;
