@@ -23,7 +23,8 @@ public class CommentService {
     private VoteService voteService;
     private UserInteractionService userInteractionService;
 
-    public CommentService(CommentRepository commentRepository, UserService userService, PostService postService, VoteService voteService, UserInteractionService userInteractionService) {
+    public CommentService(CommentRepository commentRepository, UserService userService, PostService postService, VoteService voteService,
+                          UserInteractionService userInteractionService) {
         this.commentRepository = commentRepository;
         this.userService = userService;
         this.postService = postService;

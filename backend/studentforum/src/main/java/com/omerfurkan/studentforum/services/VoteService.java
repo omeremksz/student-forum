@@ -26,7 +26,8 @@ public class VoteService {
     private CommentService commentService;
     private UserInteractionService userInteractionService;
 
-    public VoteService(VoteRepository voteRepository, UserService userService, @Lazy PostService postService, @Lazy CommentService commentService, UserInteractionService userInteractionService) {
+    public VoteService(VoteRepository voteRepository, UserService userService, @Lazy PostService postService, @Lazy CommentService commentService,
+                       UserInteractionService userInteractionService) {
         this.voteRepository = voteRepository;
         this.userService = userService;
         this.postService = postService;
@@ -122,7 +123,7 @@ public class VoteService {
 
 
     public Vote updateVoteById(Long voteId, VoteUpdateRequest voteUpdateRequest) {
-      
+
         Optional<Vote> vote = voteRepository.findById(voteId);
 
         if (vote.isPresent()) {

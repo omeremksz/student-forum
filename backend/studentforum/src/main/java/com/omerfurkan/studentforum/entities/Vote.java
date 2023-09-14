@@ -31,14 +31,14 @@ public class Vote {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="post_id")
+    @JoinColumn(name = "post_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Post post;
 
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="comment_id")
+    @JoinColumn(name = "comment_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Comment comment;

@@ -1,7 +1,5 @@
 package com.omerfurkan.studentforum.responses;
 
-import com.omerfurkan.studentforum.entities.Comment;
-import com.omerfurkan.studentforum.entities.Post;
 import com.omerfurkan.studentforum.entities.Vote;
 import java.time.LocalDateTime;
 import lombok.Data;
