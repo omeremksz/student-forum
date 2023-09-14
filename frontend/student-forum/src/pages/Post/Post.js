@@ -17,7 +17,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import CommentIcon from '@mui/icons-material/Comment';
 import customImage from "../../images/custom-image.jpg"
 import { Link, useNavigate } from 'react-router-dom';
-import colors from '../../styles/colors';
+import colors from '../../styles/Colors';
 import { GetWithoutAuth, PostWithAuth } from '../../services/HttpService';
 import { Container, DialogContentText } from '@mui/material';
 import Comment from '../Comment/Comment';
