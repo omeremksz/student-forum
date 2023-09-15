@@ -11,7 +11,7 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import { Avatar, Box, Button, Card, CardActions, CardContent, CardMedia, Container, Stack, Typography, } from '@mui/material';
 import CommentActivity from '../../Comment/CommentActivity';
 import PostActivity from '../../Post/PostActivity';
-import VoteActivity from '../../Vote/VoteActivity';
+import Footer from '../../../components/Footer';
 
 const User = () => {
   const { userId } = useParams();
@@ -21,74 +21,31 @@ const User = () => {
   const [userCommentList, setUserCommentList] = useState([]);
   const [activeTab, setActiveTab] = useState('Posts'); 
 
-  const getUserVotes = useCallback(() => {
-    GetWithAuth('/votes?userId=' + userId)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          console.log(result)
-          setUserVoteList(result);
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+  const fetchData = useCallback(async () => {
+    try {
+      const userProfileResponse = await GetWithAuth(`/profiles/${userId}`);
+      const userProfileData = await userProfileResponse.json();
+      setUserProfile(userProfileData);
+
+      const userVoteResponse = await GetWithAuth(`/votes?userId=${userId}`);
+      const userVoteData = await userVoteResponse.json();
+      setUserVoteList(userVoteData);
+
+      const userCommentResponse = await GetWithAuth(`/user-interactions/comment/${userId}`);
+      const userCommentData = await userCommentResponse.json();
+      setUserCommentList(userCommentData);
+
+      const userPostResponse = await GetWithAuth(`/user-interactions/post/${userId}`);
+      const userPostData = await userPostResponse.json();
+      setUserPostList(userPostData);
+    } catch (error) {
+      console.error(error);
+    }
   }, [userId]);
 
   useEffect(() => {
-    getUserVotes();
-  }, [getUserVotes]);
-
-  const getUserComments = useCallback(() => {
-    GetWithAuth('/comments?userId=' + userId)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setUserCommentList(result);
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-  }, [userId]);
-
-  useEffect(() => {
-    getUserComments();
-  }, [getUserComments]);
-
-  const getUserPosts = useCallback(() => {
-    GetWithAuth('/posts?userId=' + userId)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setUserPostList(result);
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-  }, [userId]);
-
-  useEffect(() => {
-    getUserPosts();
-  }, [getUserPosts]);
-
-  const getUserProfile = useCallback(() => {
-    GetWithAuth('/profiles/' + userId)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setUserProfile(result);
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-  }, [userId]);
-
-  useEffect(() => {
-    getUserProfile();
-  }, [getUserProfile]);
+    fetchData();
+  }, [fetchData]);
 
   return (
     <>
@@ -107,6 +64,7 @@ const User = () => {
             alignItems="center"
             justifyContent="center"
             marginTop="48px"
+            marginBottom="48px"
           >
             {userProfile ? (
               <>
@@ -168,7 +126,7 @@ const User = () => {
                     </CardActions>
                   </CardContent>
                 </Card>
-                <Card sx={{ width: 750 }}>
+                <Card sx={{ width: 750, height: 450 }}>
                   <CardContent
                     sx={{
                       display: 'flex',
@@ -185,7 +143,7 @@ const User = () => {
                       Activity
                     </Typography>
                     <CardActions>
-                      {['Posts', 'Comments', 'Reactions'].map((tabName) => (
+                      {['Posts', 'Comments',].map((tabName) => (
                         <Button
                           key={tabName}
                           size="small"
@@ -200,73 +158,56 @@ const User = () => {
                       ))}
                     </CardActions>
                   </CardContent>
-                    <Container>
-                      {userPostList && userCommentList && userVoteList ? (
-                        activeTab === 'Posts' ? (
-                          <Box sx={{
-                            display: 'flex', 
-                            flexDirection: 'column', 
-                            alignItems: 'center',
-                            }}>
-                            {userPostList.map(post => (
-                              <PostActivity 
-                                firstName = {userProfile.firstName}
-                                lastName = {userProfile.lastName} 
-                                contentText = {post.contentText} 
-                                creationDate = {post.creationDate} 
-                              />
-                            ))}
-                          </Box>
-                        ) : activeTab === 'Comments' ? (
-                          <Box sx={{
-                            display: 'flex', 
-                            flexDirection: 'column', 
-                            alignItems: 'center',
-                            }}>
-                            {userCommentList.map(comment => (
-                              <CommentActivity
-                                firstName = {userProfile.firstName}
-                                lastName = {userProfile.lastName}
-                                contentText={comment.contentText} 
-                                creationDate={comment.creationDate} 
-                              />
-                            ))}
-                          </Box>
-                        ) : (
-                          <Box sx={{
+                  <Container>
+                    {userPostList && userCommentList && userVoteList ? (
+                      activeTab === 'Posts' ? (
+                        <Box
+                          sx={{
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
-                          }}>
-                            {userVoteList.map((vote) => (
-                              <>
-                                {vote.post ? (
-                                  <VoteActivity
-                                  firstName = {userProfile.firstName}
-                                  lastName = {userProfile.lastName}
-                                  votedObject = {"Post"}
-                                  contentText = {vote.post.contentText} 
-                                  isUpvote = {vote.isUpvote}
-                                  creationDate={vote.creationDate} 
-                                  />
-                                ) : (
-                                  <VoteActivity
-                                  firstName = {userProfile.firstName}
-                                  lastName = {userProfile.lastName}
-                                  votedObject = {"Comment"}
-                                  contentText={vote.comment.contentText} 
-                                  isUpvote = {vote.isUpvote}
-                                  creationDate={vote.creationDate} 
-                                  />
-                                )}
-                              </>
-                            ))}
-                          </Box>
-                        )
+                          }}
+                        >
+                          {userPostList.slice(0, 2).map((post) => (
+                            <PostActivity
+                              key={post.id}
+                              firstName={userProfile.firstName}
+                              lastName={userProfile.lastName}
+                              contentText={post.contentText}
+                              creationDate={post.creationDate}
+                            />
+                          ))}
+                        </Box>
+                      ) : activeTab === 'Comments' ? (
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                          }}
+                        >
+                          {userCommentList.slice(0, 2).map((comment) => (
+                            <CommentActivity
+                              key={comment.id}
+                              firstName={userProfile.firstName}
+                              lastName={userProfile.lastName}
+                              contentText={comment.contentText}
+                              creationDate={comment.creationDate}
+                            />
+                          ))}
+                        </Box>
                       ) : (
-                        <Typography>Loading posts list...</Typography>
-                      )}
-                    </Container>
+                        <Typography>Loading posts and comments...</Typography>
+                      )
+                    ) : (
+                      <Typography>Loading posts and comment list...</Typography>
+                    )}
+                     <Box sx={{ display: 'flex', justifyContent: 'center',  }}>
+                      <Button size="small" variant="contained">
+                        Show all posts
+                      </Button>
+                     </Box>
+                  </Container>
                 </Card>
               </>
             ) : (
@@ -275,6 +216,7 @@ const User = () => {
           </Stack>
         </Container>
       </Box>
+      <Footer/>
     </>
   );
 };

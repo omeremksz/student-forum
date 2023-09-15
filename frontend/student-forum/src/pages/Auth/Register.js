@@ -6,6 +6,7 @@ import colors from '../../styles/Colors'
 import { Link, useNavigate } from 'react-router-dom'
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import { PostWithoutAuth } from '../../services/HttpService'
+import colors from '../../styles/Colors'
 
 const Register = () => {
   const navigate = useNavigate();
