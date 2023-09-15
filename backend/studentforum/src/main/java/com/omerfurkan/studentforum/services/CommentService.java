@@ -6,6 +6,7 @@ import com.omerfurkan.studentforum.entities.User;
 import com.omerfurkan.studentforum.repositories.CommentRepository;
 import com.omerfurkan.studentforum.requests.CommentCreateRequest;
 import com.omerfurkan.studentforum.requests.CommentUpdateRequest;
+import com.omerfurkan.studentforum.requests.UserInteractionCreateRequest;
 import com.omerfurkan.studentforum.responses.CommentResponse;
 import com.omerfurkan.studentforum.responses.VoteResponse;
 import java.time.LocalDateTime;
@@ -20,12 +21,15 @@ public class CommentService {
     private UserService userService;
     private PostService postService;
     private VoteService voteService;
+    private UserInteractionService userInteractionService;
 
-    public CommentService(CommentRepository commentRepository, UserService userService, PostService postService, VoteService voteService) {
+    public CommentService(CommentRepository commentRepository, UserService userService, PostService postService, VoteService voteService,
+                          UserInteractionService userInteractionService) {
         this.commentRepository = commentRepository;
         this.userService = userService;
         this.postService = postService;
         this.voteService = voteService;
+        this.userInteractionService = userInteractionService;
     }
 
     public List<CommentResponse> getAllComments(Optional<Long> userId, Optional<Long> postId) {
@@ -64,8 +68,24 @@ public class CommentService {
             commentToSave.setCreationDate(LocalDateTime.now());
             commentToSave.setUpdateDate(LocalDateTime.now());
 
-            return commentRepository.save(commentToSave);
+            commentRepository.save(commentToSave);
+
+            UserInteractionCreateRequest userInteractionCreateRequest = getUserCommentInteractionCreateRequest(user, commentToSave);
+
+            userInteractionService.createNewUserCommentInteraction(userInteractionCreateRequest);
+
+            return commentToSave;
         }
+    }
+
+    private static UserInteractionCreateRequest getUserCommentInteractionCreateRequest(User user, Comment commentToSave) {
+        UserInteractionCreateRequest userInteractionCreateRequest = new UserInteractionCreateRequest();
+
+        userInteractionCreateRequest.setUserId(user.getId());
+        userInteractionCreateRequest.setReferenceId(commentToSave.getId());
+        userInteractionCreateRequest.setReferenceType("post");
+
+        return userInteractionCreateRequest;
     }
 
     public Comment updateCommentById(Long commentId, CommentUpdateRequest commentUpdateRequest) {

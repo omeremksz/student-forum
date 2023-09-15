@@ -29,8 +29,24 @@ public class UserInteraction {
     @JsonIgnore
     private User user;
 
-    @Column(name = "interaction_type")
-    private String interactionType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Post post;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Comment comment;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vote_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Vote vote;
+
     @Column(name = "reference_id")
     private Long referenceId;
     @Column(name = "reference_type")

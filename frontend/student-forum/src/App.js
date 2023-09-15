@@ -6,6 +6,7 @@ import theme from "./styles/Theme";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import User from "./pages/Profile/User/User";
+import theme from "./styles/Theme";
 
 function App() {
   return (
