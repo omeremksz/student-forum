@@ -1,7 +1,6 @@
 package com.omerfurkan.studentforum.services;
 
 
-
 import com.omerfurkan.studentforum.entities.Email;
 import com.omerfurkan.studentforum.repositories.EmailRepository;
 import com.omerfurkan.studentforum.repositories.UserRepository;
