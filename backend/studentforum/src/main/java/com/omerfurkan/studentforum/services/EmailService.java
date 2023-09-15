@@ -1,7 +1,7 @@
 package com.omerfurkan.studentforum.services;
 
 
-import com.google.common.flogger.FluentLogger;
+
 import com.omerfurkan.studentforum.entities.Email;
 import com.omerfurkan.studentforum.repositories.EmailRepository;
 import com.omerfurkan.studentforum.repositories.UserRepository;
@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +47,8 @@ public class EmailService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private FluentLogger logger;
+    private final Logger logger = LoggerFactory.getLogger(EmailService.class);
+
 
     // TODO: ASYNC process, custom error implementation
     public ResponseEntity<String> sendSimpleEmail(@RequestBody EmailRequest simpleEmailRequest) {
@@ -73,7 +75,6 @@ public class EmailService {
                 emailRepository.save(entity);
 
             } catch (Exception e) {
-                logger.atSevere().withCause(e).log("Error sending simple email to %s:", recipient);
                 return ResponseEntity.internalServerError().body("Error sending email to " + recipient);
             }
         }
@@ -107,7 +108,7 @@ public class EmailService {
                 emailRepository.save(entity);
 
             } catch (MessagingException e) {
-                logger.atSevere().withCause(e).log("Error sending html email to %s:", recipient);
+                logger.error("Error sending email to {}", recipient);
                 return ResponseEntity.internalServerError().body("Error");
 
             }
