@@ -2,6 +2,7 @@ package com.omerfurkan.studentforum.controllers;
 
 import com.omerfurkan.studentforum.requests.EmailRequest;
 import com.omerfurkan.studentforum.services.EmailService;
+import com.omerfurkan.studentforum.utils.StuNetResponse;
 import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +21,18 @@ public class EmailController {
 
 
     @PostMapping("/simple")
-    public ResponseEntity<String> sendSimpleEmail(@RequestBody EmailRequest simpleEmailRequest) {
+    public ResponseEntity<StuNetResponse> sendSimpleEmail(@RequestBody EmailRequest simpleEmailRequest) {
         return emailService.sendSimpleEmail(simpleEmailRequest);
     }
 
     @PostMapping("/html")
-    public ResponseEntity<String> sendHtmlEmail(@RequestBody EmailRequest htmlEmailRequest) throws MessagingException {
+    public ResponseEntity<StuNetResponse> sendHtmlEmail(@RequestBody EmailRequest htmlEmailRequest) throws MessagingException {
         return emailService.sendHtmlEmail(htmlEmailRequest);
+    }
+
+    @PostMapping("eduMail")
+    public ResponseEntity<StuNetResponse> sendEduMail(@RequestBody EmailRequest eduMailRequest) {
+        return emailService.checkEduMailAndSendSimple(eduMailRequest);
     }
 
 
