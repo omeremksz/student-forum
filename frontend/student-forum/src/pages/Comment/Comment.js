@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import colors from '../../styles/colors';
+import colors from '../../styles/Colors';
 import { PostWithAuth } from '../../services/HttpService';
 
 const formatDate = (dateString) => {

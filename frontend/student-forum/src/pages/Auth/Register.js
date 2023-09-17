@@ -2,7 +2,7 @@ import { Alert, Avatar, Box, Button, Checkbox, CircularProgress, FormControlLabe
 import React, { useState } from 'react'
 import Footer from '../../components/Footer'
 import Navbar from '../../components/Navbar'
-import colors from '../../styles/colors'
+import colors from '../../styles/Colors'
 import { Link, useNavigate } from 'react-router-dom'
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import { PostWithoutAuth } from '../../services/HttpService'

@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import Navbar from '../../components/Navbar'
 import { LockClockOutlined } from '@mui/icons-material'
 import Footer from '../../components/Footer'
-import colors from '../../styles/colors'
+import colors from '../../styles/Colors'
 import { Link, useNavigate } from 'react-router-dom'
 import { PostWithoutAuth } from '../../services/HttpService'
 import { CircularProgress } from '@mui/material';
