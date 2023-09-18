@@ -150,7 +150,7 @@ const Post = (props) => {
         refreshComments();
         setCommentCount(commentList.length);
       }
-    }, [refresh, refreshComments, commentList])
+    }, [refresh, refreshComments]) // commentList
 
     return (
       <Card sx={{ width: 500, mb: 3, mt: 3 }}>

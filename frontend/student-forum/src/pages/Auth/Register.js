@@ -1,12 +1,11 @@
 import { Alert, Avatar, Box, Button, Checkbox, CircularProgress, FormControlLabel, Paper, Snackbar, TextField, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Footer from '../../components/Footer'
 import Navbar from '../../components/Navbar'
 import colors from '../../styles/Colors'
 import { Link, useNavigate } from 'react-router-dom'
 import HowToRegIcon from '@mui/icons-material/HowToReg';
 import { PostWithoutAuth } from '../../services/HttpService'
-import colors from '../../styles/Colors'
 
 const Register = () => {
   const navigate = useNavigate();
@@ -19,6 +18,7 @@ const Register = () => {
   const [successMessage, setSuccessMessage] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [codeSent, setCodeSent] = useState(false);
 
 
   const handleUserName = (value) => {
@@ -37,16 +37,59 @@ const Register = () => {
     setAcceptTerms(event.target.checked);
   };
 
+  const checkEduMail = (mail) => {
+    const reg =/^[A-Za-z0-9._+-]+@[A-Za-z]+\.[A-Za-z.]*edu\.tr$/;
+    console.log(reg.test(mail));
+    return reg.test(mail);
+
+  }
+  
+
+  
+
   const handleUserSignUp = () => {
     if (!userName || !eduEmail || !password) {
       setAuthError("Missing information! Please complete all necessary fields.");
       setSnackbarOpen(true);
       return;
     }
+    else if (
+      !checkEduMail(eduEmail)
+    ) {
+      setAuthError("Please enter a valid educational email!");
+      setSnackbarOpen(true);
+      return;
+    }
     setIsLoading(true);
-
     sendRegisterRequest();
+    sendVerificationCode();
   };
+
+  const sendVerificationMail = () => {
+    PostWithoutAuth(
+
+    )
+  }
+  const sendVerificationCode = () => {
+    PostWithoutAuth(
+      "emails/verification",
+      {
+        recipients : [eduEmail]
+      }
+    )
+    .then((res) => {
+      if (res.status === 200) {
+        setCodeSent(true);
+      } else {
+        setIsLoading(false);
+        setAuthError("An error occurred while sending verification code.");
+        setSnackbarOpen(true);
+        setUserName('');
+        setEduEmail('');
+        setPassword('');
+      }
+    })
+  }
 
   const sendRegisterRequest = () => {
     PostWithoutAuth("/auth/register", {
@@ -60,7 +103,7 @@ const Register = () => {
       setSnackbarOpen(true);
       setTimeout(() => {
         setIsLoading(false);
-        navigate('/auth/login');
+        navigate('/auth/verify');
       }, 2000);
     } else {
       setIsLoading(false);

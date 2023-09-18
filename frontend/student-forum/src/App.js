@@ -6,7 +6,7 @@ import theme from "./styles/Theme";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import User from "./pages/Profile/User/User";
-import theme from "./styles/Theme";
+import Verify from "./pages/Auth/Verify";
 
 function App() {
   return (
@@ -21,6 +21,7 @@ function App() {
 
             <Route path="/auth/login" element={<Login/>}/>
             <Route path="/auth/register" element={<Register/>}/>
+            <Route path="/auth/verify" element={<Verify/>}/> 
 
           </Routes>
         </BrowserRouter>

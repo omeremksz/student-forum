@@ -6,7 +6,7 @@ import Post from '../Post/Post';
 import { GetWithoutAuth } from '../../services/HttpService';
 
 const Home = () => {
-  const [postList, setPostList] = useState([]);
+  const [postList, setPostList] = useState([])
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(null);
 
