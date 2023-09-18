@@ -29,5 +29,10 @@ public class EmailController {
         return emailService.sendHtmlEmail(htmlEmailRequest);
     }
 
+    @PostMapping("/verification")
+    public ResponseEntity<String> sendVerificationCodeEmail(@RequestBody EmailRequest verificationEmailRequest) throws MessagingException {
+        return emailService.checkEduMailAndSendHtml(verificationEmailRequest);
+    }
+
 
 }

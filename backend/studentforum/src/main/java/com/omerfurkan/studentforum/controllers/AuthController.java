@@ -1,12 +1,19 @@
 package com.omerfurkan.studentforum.controllers;
 
 import com.omerfurkan.studentforum.entities.User;
+import com.omerfurkan.studentforum.requests.EmailRequest;
 import com.omerfurkan.studentforum.requests.UserCreateRequest;
 import com.omerfurkan.studentforum.requests.UserLoginRequest;
 import com.omerfurkan.studentforum.requests.UserRegisterRequest;
 import com.omerfurkan.studentforum.responses.AuthResponse;
 import com.omerfurkan.studentforum.security.JwtTokenProvider;
+import com.omerfurkan.studentforum.services.EmailService;
 import com.omerfurkan.studentforum.services.UserService;
+import jakarta.mail.MessagingException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,6 +33,8 @@ public class AuthController {
     private JwtTokenProvider jwtTokenProvider;
     private UserService userService;
     private PasswordEncoder passwordEncoder;
+
+    private EmailService emailService;
 
     public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService,
                           PasswordEncoder passwordEncoder) {
@@ -53,7 +62,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody UserRegisterRequest userRegisterRequest) {
+    public ResponseEntity<String> register(@RequestBody UserRegisterRequest userRegisterRequest) throws MessagingException {
         if (userService.getUserByUserName(userRegisterRequest.getUserName()) != null ||
             userService.getUserByEducationalEmail(userRegisterRequest.getEducationalEmail()) != null) {
             return new ResponseEntity<>("Username or email already exists!", HttpStatus.BAD_REQUEST);
@@ -65,7 +74,15 @@ public class AuthController {
             user.setEducationalEmail(userRegisterRequest.getEducationalEmail());
 
             UserCreateRequest userCreateRequest = new UserCreateRequest(user);
-            userService.createNewUser(userCreateRequest);
+            userService.createNewUserWithProfile(userCreateRequest);
+            Map<String, String > mp = new HashMap<>();
+            mp.put("recipient", userRegisterRequest.getEducationalEmail());
+            mp.put("{username}", userRegisterRequest.getUserName());
+            EmailRequest emailRequest = new EmailRequest().setRecipients(List.of(userRegisterRequest.getEducationalEmail()))
+                .setSubject("Student Forum Email Verification")
+                    .setTemplateName("verification")
+                        .setVariables(List.of(mp));
+            emailService.checkEduMailAndSendHtml(emailRequest);
 
             return new ResponseEntity<>("User successfully registered!", HttpStatus.CREATED);
         }

@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
+import java.util.Random;
 
 
 @AllArgsConstructor
@@ -115,6 +116,23 @@ public class EmailService {
         return ResponseEntity.ok("Html emails sent successfully");
     }
 
+    public  ResponseEntity<String> checkEduMailAndSendVerificationCode(EmailRequest verificationCodeEmailRequest) {
+        List<String> recipients = verificationCodeEmailRequest.getRecipients();
+        List<String> validRecipients = recipients.stream().filter(recipient ->
+            recipient.endsWith(".edu.tr") && checkMailFormat(recipient)).toList();
+        if (validRecipients.size() == 0) {
+            return ResponseEntity.badRequest().body("No valid recipients");
+        }
+        Random random = new Random();
+        String randomCode = String.format("%06d",random.nextInt(0, 999999));
+
+        EmailRequest newEmailRequest = new EmailRequest();
+        newEmailRequest.setRecipients(validRecipients)
+            .setSubject("Student Forum Verification Code")
+            .setBody("Your verification code is: " + randomCode)
+            .setTemplateName("verification");
+        return sendSimpleEmail(newEmailRequest);
+    }
     public ResponseEntity<String> checkEduMailAndSendHtml(EmailRequest templateEmailRequest) throws MessagingException {
         List<String> recipients = templateEmailRequest.getRecipients();
         List<String> validRecipients = recipients.stream().filter(recipient ->
@@ -149,7 +167,7 @@ public class EmailService {
     }
 
     public boolean checkMailFormat(String recipient) {
-        return recipient.matches("^[A-Za-z0-9+_.-]+@(.+)$");
+        return recipient.matches("^[A-Za-z0-9._+-]+@[A-Za-z]+\\.[A-Za-z.]*edu\\.tr$");
     }
 
 

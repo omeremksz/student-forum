@@ -12,12 +12,14 @@ import jakarta.persistence.Lob;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "profile")
 @Data
+@Accessors(chain = true)
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

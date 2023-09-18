@@ -1,0 +1,113 @@
+16-09-2023 00:06:05.512 [restartedMain] [student-forum, ] INFO 
+                c.o.s.StudentforumApplication.logStarting - Starting StudentforumApplication using Java 17.0.6 with PID 80990 (/Users/furkan/Desktop/repos/student-forum/backend/studentforum/target/classes started by furkan in /Users/furkan/Desktop/repos/student-forum/backend)
+16-09-2023 00:06:05.514 [restartedMain] [student-forum, ] INFO 
+                c.o.s.StudentforumApplication.logStartupProfileInfo - No active profile set, falling back to 1 default profile: "default"
+16-09-2023 00:06:05.528 [restartedMain] [student-forum, ] INFO 
+                o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor.logTo - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+16-09-2023 00:06:05.528 [restartedMain] [student-forum, ] INFO 
+                o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor.logTo - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+16-09-2023 00:06:05.783 [restartedMain] [student-forum, ] INFO 
+                o.s.d.r.c.RepositoryConfigurationDelegate.registerRepositoriesIn - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+16-09-2023 00:06:05.812 [restartedMain] [student-forum, ] INFO 
+                o.s.d.r.c.RepositoryConfigurationDelegate.registerRepositoriesIn - Finished Spring Data repository scanning in 26 ms. Found 10 JPA repository interfaces.
+16-09-2023 00:06:06.034 [restartedMain] [student-forum, ] INFO 
+                o.s.b.w.e.tomcat.TomcatWebServer.initialize - Tomcat initialized with port(s): 8080 (http)
+16-09-2023 00:06:06.037 [restartedMain] [student-forum, ] INFO 
+                o.a.coyote.http11.Http11NioProtocol.log - Initializing ProtocolHandler ["http-nio-8080"]
+16-09-2023 00:06:06.037 [restartedMain] [student-forum, ] INFO 
+                o.a.catalina.core.StandardService.log - Starting service [Tomcat]
+16-09-2023 00:06:06.037 [restartedMain] [student-forum, ] INFO 
+                o.a.catalina.core.StandardEngine.log - Starting Servlet engine: [Apache Tomcat/10.1.12]
+16-09-2023 00:06:06.058 [restartedMain] [student-forum, ] INFO 
+                o.a.c.c.C.[Tomcat].[localhost].[/].log - Initializing Spring embedded WebApplicationContext
+16-09-2023 00:06:06.058 [restartedMain] [student-forum, ] INFO 
+                o.s.b.w.s.c.ServletWebServerApplicationContext.prepareWebApplicationContext - Root WebApplicationContext: initialization completed in 529 ms
+16-09-2023 00:06:06.083 [restartedMain] [student-forum, ] INFO 
+                com.zaxxer.hikari.HikariDataSource.getConnection - HikariPool-1 - Starting...
+16-09-2023 00:06:06.193 [restartedMain] [student-forum, ] INFO 
+                com.zaxxer.hikari.pool.HikariPool.checkFailFast - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@771a4758
+16-09-2023 00:06:06.193 [restartedMain] [student-forum, ] INFO 
+                com.zaxxer.hikari.HikariDataSource.getConnection - HikariPool-1 - Start completed.
+16-09-2023 00:06:06.225 [restartedMain] [student-forum, ] INFO 
+                o.h.jpa.internal.util.LogHelper.logPersistenceUnitInformation - HHH000204: Processing PersistenceUnitInfo [name: default]
+16-09-2023 00:06:06.249 [restartedMain] [student-forum, ] INFO 
+                org.hibernate.Version.logVersion - HHH000412: Hibernate ORM core version 6.2.7.Final
+16-09-2023 00:06:06.250 [restartedMain] [student-forum, ] INFO 
+                org.hibernate.cfg.Environment.<clinit> - HHH000406: Using bytecode reflection optimizer
+16-09-2023 00:06:06.302 [restartedMain] [student-forum, ] INFO 
+                o.h.b.i.BytecodeProviderInitiator.buildBytecodeProvider - HHH000021: Bytecode provider name : bytebuddy
+16-09-2023 00:06:06.351 [restartedMain] [student-forum, ] INFO 
+                o.s.o.j.p.SpringPersistenceUnitInfo.addTransformer - No LoadTimeWeaver setup: ignoring JPA class transformer
+16-09-2023 00:06:06.459 [restartedMain] [student-forum, ] INFO 
+                o.h.b.i.BytecodeProviderInitiator.buildBytecodeProvider - HHH000021: Bytecode provider name : bytebuddy
+16-09-2023 00:06:06.724 [restartedMain] [student-forum, ] INFO 
+                o.h.e.t.j.p.i.JtaPlatformInitiator.initiateService - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+16-09-2023 00:06:06.857 [restartedMain] [student-forum, ] INFO 
+                o.s.o.j.LocalContainerEntityManagerFactoryBean.buildNativeEntityManagerFactory - Initialized JPA EntityManagerFactory for persistence unit 'default'
+16-09-2023 00:06:07.164 [restartedMain] [student-forum, ] WARN 
+                o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration.openEntityManagerInViewInterceptor - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+16-09-2023 00:06:07.266 [restartedMain] [student-forum, ] INFO 
+                o.s.s.web.DefaultSecurityFilterChain.<init> - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@eb038a6, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@306432f8, org.springframework.security.web.context.SecurityContextHolderFilter@14db0420, org.springframework.security.web.header.HeaderWriterFilter@3e0e1bce, org.springframework.web.filter.CorsFilter@4491acc8, org.springframework.security.web.authentication.logout.LogoutFilter@523126e7, com.omerfurkan.studentforum.security.JwtAuthenticationFilter@7527e898, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@33a1a969, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@24a02707, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@725a7ced, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@50c2c427, org.springframework.security.web.session.SessionManagementFilter@5916bf55, org.springframework.security.web.access.ExceptionTranslationFilter@31e694f4, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@5b33ea4c]
+16-09-2023 00:06:07.331 [restartedMain] [student-forum, ] INFO 
+                o.s.b.d.a.OptionalLiveReloadServer.startServer - LiveReload server is running on port 35729
+16-09-2023 00:06:07.340 [restartedMain] [student-forum, ] INFO 
+                o.a.coyote.http11.Http11NioProtocol.log - Starting ProtocolHandler ["http-nio-8080"]
+16-09-2023 00:06:07.347 [restartedMain] [student-forum, ] INFO 
+                o.s.b.w.e.tomcat.TomcatWebServer.start - Tomcat started on port(s): 8080 (http) with context path ''
+16-09-2023 00:06:07.352 [restartedMain] [student-forum, ] INFO 
+                c.o.s.StudentforumApplication.logStarted - Started StudentforumApplication in 1.942 seconds (process running for 2.423)
+16-09-2023 00:07:04.620 [http-nio-8080-exec-1] [student-forum, ] INFO 
+                o.a.c.c.C.[Tomcat].[localhost].[/].log - Initializing Spring DispatcherServlet 'dispatcherServlet'
+16-09-2023 00:07:04.620 [http-nio-8080-exec-1] [student-forum, ] INFO 
+                o.s.web.servlet.DispatcherServlet.initServletBean - Initializing Servlet 'dispatcherServlet'
+16-09-2023 00:07:04.621 [http-nio-8080-exec-1] [student-forum, ] INFO 
+                o.s.web.servlet.DispatcherServlet.initServletBean - Completed initialization in 1 ms
+16-09-2023 01:35:52.651 [HikariPool-1 housekeeper] [student-forum, ] WARN 
+                com.zaxxer.hikari.pool.HikariPool.run - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=25m45s807ms).
+16-09-2023 01:46:25.970 [HikariPool-1 housekeeper] [student-forum, ] WARN 
+                com.zaxxer.hikari.pool.HikariPool.run - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=10m33s319ms).
+16-09-2023 01:58:29.645 [SpringApplicationShutdownHook] [student-forum, ] INFO 
+                o.s.o.j.LocalContainerEntityManagerFactoryBean.destroy - Closing JPA EntityManagerFactory for persistence unit 'default'
+16-09-2023 01:58:29.648 [SpringApplicationShutdownHook] [student-forum, ] INFO 
+                com.zaxxer.hikari.HikariDataSource.close - HikariPool-1 - Shutdown initiated...
+16-09-2023 01:58:29.654 [SpringApplicationShutdownHook] [student-forum, ] INFO 
+                com.zaxxer.hikari.HikariDataSource.close - HikariPool-1 - Shutdown completed.
+16-09-2023 18:48:37.945 [restartedMain] [student-forum, ] INFO  c.o.s.StudentforumApplication.logStarting - Starting StudentforumApplication using Java 17.0.6 with PID 97534 (/Users/furkan/Desktop/repos/student-forum/backend/studentforum/target/classes started by furkan in /Users/furkan/Desktop/repos/student-forum/backend)
+16-09-2023 18:48:37.946 [restartedMain] [student-forum, ] INFO  c.o.s.StudentforumApplication.logStartupProfileInfo - No active profile set, falling back to 1 default profile: "default"
+16-09-2023 18:48:37.961 [restartedMain] [student-forum, ] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor.logTo - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+16-09-2023 18:48:37.961 [restartedMain] [student-forum, ] INFO  o.s.b.d.e.DevToolsPropertyDefaultsPostProcessor.logTo - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+16-09-2023 18:48:38.240 [restartedMain] [student-forum, ] INFO  o.s.d.r.c.RepositoryConfigurationDelegate.registerRepositoriesIn - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+16-09-2023 18:48:38.269 [restartedMain] [student-forum, ] INFO  o.s.d.r.c.RepositoryConfigurationDelegate.registerRepositoriesIn - Finished Spring Data repository scanning in 26 ms. Found 10 JPA repository interfaces.
+16-09-2023 18:48:38.498 [restartedMain] [student-forum, ] INFO  o.s.b.w.e.tomcat.TomcatWebServer.initialize - Tomcat initialized with port(s): 8080 (http)
+16-09-2023 18:48:38.502 [restartedMain] [student-forum, ] INFO  o.a.coyote.http11.Http11NioProtocol.log - Initializing ProtocolHandler ["http-nio-8080"]
+16-09-2023 18:48:38.502 [restartedMain] [student-forum, ] INFO  o.a.catalina.core.StandardService.log - Starting service [Tomcat]
+16-09-2023 18:48:38.502 [restartedMain] [student-forum, ] INFO  o.a.catalina.core.StandardEngine.log - Starting Servlet engine: [Apache Tomcat/10.1.12]
+16-09-2023 18:48:38.524 [restartedMain] [student-forum, ] INFO  o.a.c.c.C.[Tomcat].[localhost].[/].log - Initializing Spring embedded WebApplicationContext
+16-09-2023 18:48:38.524 [restartedMain] [student-forum, ] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext.prepareWebApplicationContext - Root WebApplicationContext: initialization completed in 562 ms
+16-09-2023 18:48:38.549 [restartedMain] [student-forum, ] INFO  com.zaxxer.hikari.HikariDataSource.getConnection - HikariPool-1 - Starting...
+16-09-2023 18:48:38.677 [restartedMain] [student-forum, ] INFO  com.zaxxer.hikari.pool.HikariPool.checkFailFast - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@62e8b68a
+16-09-2023 18:48:38.677 [restartedMain] [student-forum, ] INFO  com.zaxxer.hikari.HikariDataSource.getConnection - HikariPool-1 - Start completed.
+16-09-2023 18:48:38.709 [restartedMain] [student-forum, ] INFO  o.h.jpa.internal.util.LogHelper.logPersistenceUnitInformation - HHH000204: Processing PersistenceUnitInfo [name: default]
+16-09-2023 18:48:38.733 [restartedMain] [student-forum, ] INFO  org.hibernate.Version.logVersion - HHH000412: Hibernate ORM core version 6.2.7.Final
+16-09-2023 18:48:38.735 [restartedMain] [student-forum, ] INFO  org.hibernate.cfg.Environment.<clinit> - HHH000406: Using bytecode reflection optimizer
+16-09-2023 18:48:38.785 [restartedMain] [student-forum, ] INFO  o.h.b.i.BytecodeProviderInitiator.buildBytecodeProvider - HHH000021: Bytecode provider name : bytebuddy
+16-09-2023 18:48:38.831 [restartedMain] [student-forum, ] INFO  o.s.o.j.p.SpringPersistenceUnitInfo.addTransformer - No LoadTimeWeaver setup: ignoring JPA class transformer
+16-09-2023 18:48:38.947 [restartedMain] [student-forum, ] INFO  o.h.b.i.BytecodeProviderInitiator.buildBytecodeProvider - HHH000021: Bytecode provider name : bytebuddy
+16-09-2023 18:48:39.340 [restartedMain] [student-forum, ] INFO  o.h.e.t.j.p.i.JtaPlatformInitiator.initiateService - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+16-09-2023 18:48:39.500 [restartedMain] [student-forum, ] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean.buildNativeEntityManagerFactory - Initialized JPA EntityManagerFactory for persistence unit 'default'
+16-09-2023 18:48:39.925 [restartedMain] [student-forum, ] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration.openEntityManagerInViewInterceptor - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+16-09-2023 18:48:40.030 [restartedMain] [student-forum, ] INFO  o.s.s.web.DefaultSecurityFilterChain.<init> - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@3eead3e, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@74d1d3d, org.springframework.security.web.context.SecurityContextHolderFilter@6f3e4d67, org.springframework.security.web.header.HeaderWriterFilter@1c3bca2e, org.springframework.web.filter.CorsFilter@465ac49, org.springframework.security.web.authentication.logout.LogoutFilter@1edca86a, com.omerfurkan.studentforum.security.JwtAuthenticationFilter@459c1a6e, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@665c5f69, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@15eecb78, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4f313bbd, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@130fe51e, org.springframework.security.web.session.SessionManagementFilter@7b111871, org.springframework.security.web.access.ExceptionTranslationFilter@191b5677, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@6758cf10]
+16-09-2023 18:48:40.096 [restartedMain] [student-forum, ] INFO  o.s.b.d.a.OptionalLiveReloadServer.startServer - LiveReload server is running on port 35729
+16-09-2023 18:48:40.105 [restartedMain] [student-forum, ] INFO  o.a.coyote.http11.Http11NioProtocol.log - Starting ProtocolHandler ["http-nio-8080"]
+16-09-2023 18:48:40.111 [restartedMain] [student-forum, ] INFO  o.s.b.w.e.tomcat.TomcatWebServer.start - Tomcat started on port(s): 8080 (http) with context path ''
+16-09-2023 18:48:40.116 [restartedMain] [student-forum, ] INFO  c.o.s.StudentforumApplication.logStarted - Started StudentforumApplication in 2.295 seconds (process running for 2.623)
+16-09-2023 18:49:19.367 [http-nio-8080-exec-1] [student-forum, ] INFO  o.a.c.c.C.[Tomcat].[localhost].[/].log - Initializing Spring DispatcherServlet 'dispatcherServlet'
+16-09-2023 18:49:19.367 [http-nio-8080-exec-1] [student-forum, ] INFO  o.s.web.servlet.DispatcherServlet.initServletBean - Initializing Servlet 'dispatcherServlet'
+16-09-2023 18:49:19.370 [http-nio-8080-exec-1] [student-forum, ] INFO  o.s.web.servlet.DispatcherServlet.initServletBean - Completed initialization in 3 ms
+16-09-2023 20:51:52.904 [HikariPool-1 housekeeper] [student-forum, ] WARN  com.zaxxer.hikari.pool.HikariPool.run - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=38m43s458ms).
+16-09-2023 21:04:47.316 [HikariPool-1 housekeeper] [student-forum, ] WARN  com.zaxxer.hikari.pool.HikariPool.run - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=12m54s411ms).
+16-09-2023 21:12:11.788 [HikariPool-1 housekeeper] [student-forum, ] WARN  com.zaxxer.hikari.pool.HikariPool.run - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=5m24s448ms).
+16-09-2023 21:17:35.908 [HikariPool-1 housekeeper] [student-forum, ] WARN  com.zaxxer.hikari.pool.HikariPool.run - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m54s83ms).
+16-09-2023 22:20:33.661 [HikariPool-1 housekeeper] [student-forum, ] WARN  com.zaxxer.hikari.pool.HikariPool.run - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1h1m57s733ms).
+16-09-2023 22:55:37.987 [HikariPool-1 housekeeper] [student-forum, ] WARN  com.zaxxer.hikari.pool.HikariPool.run - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=35m4s326ms).
+16-09-2023 23:24:58.658 [HikariPool-1 housekeeper] [student-forum, ] WARN  com.zaxxer.hikari.pool.HikariPool.run - HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=29m20s671ms).

@@ -1,10 +1,13 @@
 package com.omerfurkan.studentforum.controllers;
 
+import com.omerfurkan.studentforum.entities.Profile;
 import com.omerfurkan.studentforum.entities.User;
 import com.omerfurkan.studentforum.requests.UserCreateRequest;
 import com.omerfurkan.studentforum.requests.UserUpdateRequest;
+import com.omerfurkan.studentforum.services.ProfileService;
 import com.omerfurkan.studentforum.services.UserService;
 import java.util.List;
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,12 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/users")
+@AllArgsConstructor
 public class UserController {
     private UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
 
     @GetMapping
     public List<User> getAllUsers() {
@@ -34,8 +35,13 @@ public class UserController {
     }
 
     @PostMapping
-    public User createNewUser(@RequestBody UserCreateRequest userCreateRequest) {
-        return userService.createNewUser(userCreateRequest);
+    public User createNewUserWithProfile(@RequestBody UserCreateRequest userCreateRequest) {
+        return userService.createNewUserWithProfile(userCreateRequest);
+    }
+
+    @PostMapping("activate/{userId}")
+    public User activateUserById(@PathVariable Long userId) {
+        return userService.activateUser(userId);
     }
 
     @PutMapping("/{userId}")

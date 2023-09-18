@@ -19,7 +19,7 @@ public class EmailRequest {
     private String body;
     private List<String> recipients;
     private String templateName;
-    // variales may need rework
+    // variables may need rework
     private List<Map<String, String>> variables; // recipient, variableName, variableValue
 
     public Map<String, Object> getVariablesOfRecipient(String recipient) {
