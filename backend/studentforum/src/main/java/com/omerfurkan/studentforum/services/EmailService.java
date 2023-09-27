@@ -2,25 +2,30 @@ package com.omerfurkan.studentforum.services;
 
 
 import com.omerfurkan.studentforum.entities.Email;
+import com.omerfurkan.studentforum.exceptions.BadRequestException;
 import com.omerfurkan.studentforum.repositories.EmailRepository;
 import com.omerfurkan.studentforum.repositories.UserRepository;
 import com.omerfurkan.studentforum.requests.EmailRequest;
+import com.omerfurkan.studentforum.utils.StuNetResponse;
+import com.omerfurkan.studentforum.utils.StuNetResponseBuilder;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -29,6 +34,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 @AllArgsConstructor
 @NoArgsConstructor
 @Service
+@Slf4j
 public class EmailService {
 
     @Autowired
@@ -46,11 +52,13 @@ public class EmailService {
     @Autowired
     private UserRepository userRepository;
 
-    private final Logger logger = LoggerFactory.getLogger(EmailService.class);
+    @Autowired
+    private StuNetResponseBuilder stuNetResponseBuilder;
 
 
-    // TODO: ASYNC process, custom error implementation
-    public ResponseEntity<String> sendSimpleEmail(@RequestBody EmailRequest simpleEmailRequest) {
+    // TODO: async
+    @Transactional
+    public ResponseEntity<StuNetResponse> sendSimpleEmail(@RequestBody EmailRequest simpleEmailRequest) {
 
         SimpleMailMessage message = new SimpleMailMessage();
         String subject = simpleEmailRequest.getSubject();
@@ -61,6 +69,8 @@ public class EmailService {
         message.setFrom(from);
         message.setSubject(subject);
         message.setText(body);
+
+        List<String> failedRecipients = new ArrayList<>();
 
         for (String recipient : recipients) {
             try {
@@ -74,23 +84,27 @@ public class EmailService {
                 emailRepository.save(entity);
 
             } catch (Exception e) {
-                return ResponseEntity.internalServerError().body("Error sending email to " + recipient);
+                log.error("Error sending email to {}", recipient);
+                failedRecipients.add(recipient);
             }
         }
-        ;
-        return ResponseEntity.ok("Simple emails sent successfully");
+        List<String> successfulRecipients = recipients.stream().filter(recipient -> !failedRecipients.contains(recipient)).toList();
+
+        return stuNetResponseBuilder.buildResponse(HttpStatus.OK, "Simple emails sent successfully, successful recipients on data", successfulRecipients);
 
 
     }
 
-    //TODO: should create a new custom error class with status code and message
-    public ResponseEntity<String> sendHtmlEmail(EmailRequest templateEmailRequest) throws MessagingException {
+    //TODO: async
+    public ResponseEntity<StuNetResponse> sendHtmlEmail(EmailRequest templateEmailRequest) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
 
         message.setFrom(new InternetAddress(from));
         message.setSubject(templateEmailRequest.getSubject());
         List<String> recipients = templateEmailRequest.getRecipients();
         message.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(String.join(",", recipients)));
+
+        List<String> failedRecipients = new ArrayList<>();
 
         for (String recipient : recipients) {
             Context context = new Context();
@@ -107,20 +121,21 @@ public class EmailService {
                 emailRepository.save(entity);
 
             } catch (MessagingException e) {
-                logger.error("Error sending email to {}", recipient);
-                return ResponseEntity.internalServerError().body("Error");
-
+                log.error("Error sending email to {}", recipient);
+                failedRecipients.add(recipient);
             }
         }
-        return ResponseEntity.ok("Html emails sent successfully");
+        List<String> successfulRecipients = recipients.stream().filter(recipient -> !failedRecipients.contains(recipient)).toList();
+
+        return stuNetResponseBuilder.buildResponse(HttpStatus.OK, "Html emails sent successfully", successfulRecipients);
     }
 
-    public ResponseEntity<String> checkEduMailAndSendHtml(EmailRequest templateEmailRequest) throws MessagingException {
+    public ResponseEntity<StuNetResponse> checkEduMailAndSendHtml(EmailRequest templateEmailRequest) throws MessagingException {
         List<String> recipients = templateEmailRequest.getRecipients();
         List<String> validRecipients = recipients.stream().filter(recipient ->
             recipient.endsWith(".edu.tr") && checkMailFormat(recipient)).toList();
         if (validRecipients.size() == 0) {
-            return ResponseEntity.badRequest().body("No valid recipients");
+            throw new BadRequestException("No educational recipients");
         }
         List<Map<String, String>> validVariables =
             templateEmailRequest.getVariables().stream().filter(map -> validRecipients.contains(map.get("recipient"))).toList();
@@ -134,12 +149,12 @@ public class EmailService {
 
     }
 
-    public ResponseEntity<String> checkEduMailAndSendSimple(EmailRequest emailRequest) {
+    public ResponseEntity<StuNetResponse> checkEduMailAndSendSimple(EmailRequest emailRequest) {
         List<String> recipients = emailRequest.getRecipients();
         List<String> validRecipients = recipients.stream().filter(recipient ->
             recipient.endsWith(".edu.tr") && checkMailFormat(recipient)).toList();
         if (validRecipients.size() == 0) {
-            return ResponseEntity.badRequest().body("No valid recipients");
+            throw new BadRequestException("No educational recipients");
         }
         EmailRequest newEmailRequest = new EmailRequest();
         newEmailRequest.setRecipients(validRecipients)
