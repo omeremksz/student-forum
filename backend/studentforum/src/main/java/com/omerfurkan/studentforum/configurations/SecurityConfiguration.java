@@ -67,7 +67,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
             .authorizeRequests()
-            .requestMatchers("/auth/**", "/posts/**", "/comments/**")
+            .requestMatchers("/auth/**", "/posts/**", "/comments/**", "/emails/**")
             .permitAll()
             .anyRequest()
             .authenticated()

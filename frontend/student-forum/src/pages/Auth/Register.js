@@ -67,9 +67,15 @@ const Register = () => {
 
   const sendVerificationMail = () => {
     PostWithoutAuth(
+      "emails/verification",
+      {
+        
+      }
 
     )
   }
+
+
   const sendVerificationCode = () => {
     PostWithoutAuth(
       "emails/verification",

@@ -31,7 +31,7 @@ public class EmailController {
 
     @PostMapping("/verification")
     public ResponseEntity<String> sendVerificationCodeEmail(@RequestBody EmailRequest verificationEmailRequest) throws MessagingException {
-        return emailService.checkEduMailAndSendHtml(verificationEmailRequest);
+        return emailService.sendVerificationMail(verificationEmailRequest);
     }
 
 

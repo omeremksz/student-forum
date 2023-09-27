@@ -78,10 +78,10 @@ public class AuthController {
             Map<String, String > mp = new HashMap<>();
             mp.put("recipient", userRegisterRequest.getEducationalEmail());
             mp.put("{username}", userRegisterRequest.getUserName());
-            EmailRequest emailRequest = new EmailRequest().setRecipients(List.of(userRegisterRequest.getEducationalEmail()))
+            EmailRequest emailRequest = new EmailRequest().setRecipient(userRegisterRequest.getEducationalEmail())
                 .setSubject("Student Forum Email Verification")
                     .setTemplateName("verification")
-                        .setVariables(List.of(mp));
+                        .setVariables(mp);
             emailService.checkEduMailAndSendHtml(emailRequest);
 
             return new ResponseEntity<>("User successfully registered!", HttpStatus.CREATED);

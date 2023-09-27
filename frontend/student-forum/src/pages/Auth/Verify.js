@@ -58,7 +58,7 @@ const Verify = () => {
             type="text"
             placeholder="Enter your verification code"
             value={verificationCode}
-            onChange={(e) => handleVerificationCodeChange(e.target.value)}
+            // onChange={(e) => handleVerificationCodeChange(e.target.value)}
             disabled={isLoading}
           />
           {isLoading ? (

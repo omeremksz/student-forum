@@ -9,12 +9,9 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -24,12 +21,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring6.SpringTemplateEngine;
+
+import java.util.Map;
 import java.util.Random;
 
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Service
+@Slf4j
 public class EmailService {
 
     @Autowired
@@ -47,8 +47,6 @@ public class EmailService {
     @Autowired
     private UserRepository userRepository;
 
-    private final Logger logger = LoggerFactory.getLogger(EmailService.class);
-
 
     // TODO: ASYNC process, custom error implementation
     public ResponseEntity<String> sendSimpleEmail(@RequestBody EmailRequest simpleEmailRequest) {
@@ -56,14 +54,14 @@ public class EmailService {
         SimpleMailMessage message = new SimpleMailMessage();
         String subject = simpleEmailRequest.getSubject();
         String body = simpleEmailRequest.getBody();
-        List<String> recipients = simpleEmailRequest.getRecipients();
+        String recipient = simpleEmailRequest.getRecipient();
         String template = simpleEmailRequest.getTemplateName();
 
         message.setFrom(from);
         message.setSubject(subject);
         message.setText(body);
 
-        for (String recipient : recipients) {
+
             try {
                 message.setTo(recipient);
                 mailSender.send(message);
@@ -77,8 +75,7 @@ public class EmailService {
             } catch (Exception e) {
                 return ResponseEntity.internalServerError().body("Error sending email to " + recipient);
             }
-        }
-        ;
+
         return ResponseEntity.ok("Simple emails sent successfully");
 
 
@@ -90,12 +87,14 @@ public class EmailService {
 
         message.setFrom(new InternetAddress(from));
         message.setSubject(templateEmailRequest.getSubject());
-        List<String> recipients = templateEmailRequest.getRecipients();
-        message.setRecipients(MimeMessage.RecipientType.TO, InternetAddress.parse(String.join(",", recipients)));
+        String recipient = templateEmailRequest.getRecipient();
+        message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(recipient));
 
-        for (String recipient : recipients) {
+        {
             Context context = new Context();
-            context.setVariables(templateEmailRequest.getVariablesOfRecipient(recipient));
+
+            context.setVariables(templateEmailRequest.getObjectVariables());
+            context.setVariable("username", recipient);
             String html = templateEngine.process(templateEmailRequest.getTemplateName(), context);
             try {
                 message.setContent(html, "text/html; charset=utf-8");
@@ -108,7 +107,40 @@ public class EmailService {
                 emailRepository.save(entity);
 
             } catch (MessagingException e) {
-                logger.error("Error sending email to {}", recipient);
+                log.error("Error sending email to {}", recipient);
+                return ResponseEntity.internalServerError().body("Error");
+
+            }
+        }
+        return ResponseEntity.ok("Html emails sent successfully");
+    }
+    public ResponseEntity<String> sendVerificationMail(EmailRequest verificationEmailRequest) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+
+        message.setFrom(new InternetAddress(from));
+        message.setSubject(verificationEmailRequest.getSubject());
+        String recipient = verificationEmailRequest.getRecipient();
+        message.setRecipient(MimeMessage.RecipientType.TO, new InternetAddress(recipient));
+
+        {
+            Context context = new Context();
+
+            for (Map.Entry<String, String> entry : verificationEmailRequest.getVariables().entrySet()) {
+                context.setVariable(entry.getKey(), entry.getValue());
+            }
+            String html = templateEngine.process(verificationEmailRequest.getTemplateName(), context);
+            try {
+                message.setContent(html, "text/html; charset=utf-8");
+                mailSender.send(message);
+                Email entity = new Email();
+                entity.setRecipient(recipient)
+                    .setUser(userRepository.findByEducationalEmail(recipient))
+                    .setTemplate(verificationEmailRequest.getTemplateName())
+                    .setCreationDate(LocalDateTime.now());
+                emailRepository.save(entity);
+
+            } catch (MessagingException e) {
+                log.error("Error sending email to {}", recipient);
                 return ResponseEntity.internalServerError().body("Error");
 
             }
@@ -117,50 +149,46 @@ public class EmailService {
     }
 
     public  ResponseEntity<String> checkEduMailAndSendVerificationCode(EmailRequest verificationCodeEmailRequest) {
-        List<String> recipients = verificationCodeEmailRequest.getRecipients();
-        List<String> validRecipients = recipients.stream().filter(recipient ->
-            recipient.endsWith(".edu.tr") && checkMailFormat(recipient)).toList();
-        if (validRecipients.size() == 0) {
+        String recipient = verificationCodeEmailRequest.getRecipient();
+        if (!recipient.endsWith(".edu.tr") || !checkMailFormat(recipient)) {
+            log.error("No valid recipient {}", recipient);
             return ResponseEntity.badRequest().body("No valid recipients");
         }
         Random random = new Random();
         String randomCode = String.format("%06d",random.nextInt(0, 999999));
 
         EmailRequest newEmailRequest = new EmailRequest();
-        newEmailRequest.setRecipients(validRecipients)
+        newEmailRequest.setRecipient(recipient)
             .setSubject("Student Forum Verification Code")
             .setBody("Your verification code is: " + randomCode)
             .setTemplateName("verification");
         return sendSimpleEmail(newEmailRequest);
     }
     public ResponseEntity<String> checkEduMailAndSendHtml(EmailRequest templateEmailRequest) throws MessagingException {
-        List<String> recipients = templateEmailRequest.getRecipients();
-        List<String> validRecipients = recipients.stream().filter(recipient ->
-            recipient.endsWith(".edu.tr") && checkMailFormat(recipient)).toList();
-        if (validRecipients.size() == 0) {
+        String recipient = templateEmailRequest.getRecipient();
+        if (!recipient.endsWith(".edu.tr") || !checkMailFormat(recipient)) {
+            log.error("No valid recipient {}", recipient);
             return ResponseEntity.badRequest().body("No valid recipients");
         }
-        List<Map<String, String>> validVariables =
-            templateEmailRequest.getVariables().stream().filter(map -> validRecipients.contains(map.get("recipient"))).toList();
+
 
         EmailRequest newTemplateEmailRequest = new EmailRequest();
-        newTemplateEmailRequest.setRecipients(validRecipients)
+        newTemplateEmailRequest.setRecipient(recipient)
             .setSubject(templateEmailRequest.getSubject())
             .setTemplateName(templateEmailRequest.getTemplateName())
-            .setVariables(validVariables);
+            .setVariables(templateEmailRequest.getVariables());
         return sendHtmlEmail(newTemplateEmailRequest);
 
     }
 
     public ResponseEntity<String> checkEduMailAndSendSimple(EmailRequest emailRequest) {
-        List<String> recipients = emailRequest.getRecipients();
-        List<String> validRecipients = recipients.stream().filter(recipient ->
-            recipient.endsWith(".edu.tr") && checkMailFormat(recipient)).toList();
-        if (validRecipients.size() == 0) {
+        String recipient = emailRequest.getRecipient();
+        if (!recipient.endsWith(".edu.tr") || !checkMailFormat(recipient)) {
+            log.error("No valid recipient {}", recipient);
             return ResponseEntity.badRequest().body("No valid recipients");
         }
         EmailRequest newEmailRequest = new EmailRequest();
-        newEmailRequest.setRecipients(validRecipients)
+        newEmailRequest.setRecipient(recipient)
             .setSubject(emailRequest.getSubject())
             .setBody(emailRequest.getBody());
         return sendSimpleEmail(newEmailRequest);
@@ -169,6 +197,8 @@ public class EmailService {
     public boolean checkMailFormat(String recipient) {
         return recipient.matches("^[A-Za-z0-9._+-]+@[A-Za-z]+\\.[A-Za-z.]*edu\\.tr$");
     }
+
+
 
 
 }
